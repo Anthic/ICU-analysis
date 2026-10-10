@@ -1,0 +1,17 @@
+feature,total_measurements,outliers_clipped_to_nan,clipped_pct
+resp_rate,1431792,7039,0.492
+map,1440803,3199,0.222
+temperature,421567,457,0.108
+wbc,141670,86,0.061
+creatinine,138777,30,0.022
+spo2,1422352,313,0.022
+dbp,1440006,232,0.016
+glucose,226677,31,0.014
+heart_rate,1450316,184,0.013
+sbp,1440255,138,0.01
+potassium,233943,21,0.009
+sodium,192578,12,0.006
+lactate,130588,6,0.005
+platelets,144650,4,0.003
+bun,138765,4,0.003
+bicarbonate,141469,3,0.002

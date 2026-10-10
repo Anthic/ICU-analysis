@@ -1,0 +1,6 @@
+step,n,excluded
+All ICU stays in MIMIC-IV,94458,0
+First ICU stay per patient,65366,29092
+ICU LOS >= 24h,51838,13528
+Adult patients (Age >= 18),51838,0
+Final analyzed cohort,51838,0

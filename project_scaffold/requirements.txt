@@ -1,0 +1,28 @@
+# --- Core Data Manipulation & Storage ---
+pandas
+numpy
+pyarrow
+fastparquet
+scipy
+
+# --- Machine Learning & Baseline Modeling ---
+scikit-learn
+xgboost
+lightgbm
+joblib
+
+# --- Uncertainty Quantification & Conformal Prediction ---
+mapie
+crepes
+statsmodels
+
+# --- Scientific Plotting & Publication Figures ---
+matplotlib
+seaborn
+
+# --- Production Logging, Progress Bars & Dev Tools ---
+tqdm
+rich
+pydantic
+ipykernel
+jupyter

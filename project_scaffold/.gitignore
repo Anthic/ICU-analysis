@@ -1,0 +1,45 @@
+# ==========================================
+# Virtual Environment
+# ==========================================
+.venv/
+venv/
+env/
+ENV/
+
+# ==========================================
+# Python artifacts & caches
+# ==========================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.ipynb_checkpoints/
+
+# ==========================================
+# DATA: CRITICAL - PhysioNet DUA & HIPAA
+# NEVER commit raw or processed patient data
+# ==========================================
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+*.parquet
+
+# ==========================================
+# Environment & Sensitive configs
+# ==========================================
+.env
+*.env
+*.local
+
+# ==========================================
+# OS & Scratch files
+# ==========================================
+.DS_Store
+Thumbs.db
+desktop.ini
+*.tmp
+wget.exe
+.wget-hsts
+error.md
