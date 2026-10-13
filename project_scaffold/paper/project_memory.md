@@ -31,6 +31,8 @@ repair cost in prediction-set size?
 **prediction set** over {0,1} ({survive}, {die}, {both}, or empty), NOT a
 numeric interval. Coverage = the true label lies in the set. Earlier proposal
 drafts said "interval"; use "prediction set" in the paper.
+Never call a prediction set containing only `{0}` certain survival; it is a
+model prediction set and does not establish certainty.
 
 **Key clinical point:** mortality is about 10%, so marginal coverage near 90%
 is easy to reach while coverage among patients who died can be much lower.
@@ -272,3 +274,13 @@ model inputs.
 2. Keep `*_measured` flags in the main model, or only in the sensitivity run?
 3. Which pairs of attributes (if any) to analyse jointly in Phase 4-5?
 4. Target journal and reporting guideline (TRIPOD+AI is likely relevant).
+
+## 13. Ethics, Data Provenance, and Reviewer Statements
+
+- **IRB statement:** UNVERIFIED. Do not use the proposed approval/waiver language until checked against authoritative documentation.
+- **Credentialing:** CITI Program "Data or Specimens Only Research" completed. Authorized PhysioNet credentialed user.
+- **Data DOI:** UNVERIFIED — proposed DOI: https://doi.org/10.13026/83zf-8025; verify before citing.
+- **GitHub URL:** UNVERIFIED — proposed URL: https://github.com/Anthic/ICU-analysis; verify before citing.
+- **STROBE Flow:** All ICU stays 94,458 -> First ICU stay 65,366 -> LOS >= 24h 51,838 -> Adults >= 18: 51,838 (10.65% mortality).
+- **Extraction Protocol:** Streamed chunked extraction (chunksize 2,000,000) from `chartevents` & `labevents`. Observation windows: vitals [intime, intime+24h], labs [intime-6h, intime+24h]. Features: min/max/mean. Outlier filtering per physiological ranges (NaN conversion, no patient row drop).
+- **Full Guide:** See `paper/reviewer_responses_and_methods_evidence.md` for verbatim text snippets and reviewer FAQ answers.

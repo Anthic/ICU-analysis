@@ -25,6 +25,11 @@ data/raw/*
 data/processed/*
 !data/processed/.gitkeep
 *.parquet
+data/
+outputs/results/*.parquet
+checkpoint*
+*.csv.gz
+# Never commit patient-level files, regardless of extension or location.
 
 # ==========================================
 # Environment & Sensitive configs
