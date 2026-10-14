@@ -152,9 +152,7 @@ bicarbonate 0.002%. (Counts are measurements, not patients.)
 
 **No imputation in Phase 2.** XGBoost handles NaN natively. Any imputation must
 be fit on the training split only. `*_measured` flags exist for all labs;
-config `INCLUDE_MEASURED_FLAGS`. Plan: run with and without flags
-(sensitivity), because test ordering reflects care processes that may differ
-by group.
+config `INCLUDE_MEASURED_FLAGS`. The flags variant is supplementary only.
 
 **Missingness (share of stays missing):** lactate 27.88%; temperature 3.16%;
 all other features below 1.5%; gcs_min 0.20%.
@@ -178,12 +176,15 @@ unlikely to be explained mainly by differential missingness.
 | Out-of-range -> NaN, not row drop | Keeps the patient, loses only the bad value |
 | Manual conformal implementation | Full control, easy to explain in Methods |
 | alpha = 0.10 (90% coverage) | Conventional; consider 0.05 as sensitivity |
+| Primary variant = noflags (52 predictors) | Use native XGBoost missing-value handling without measured flags. A flags-vs-noflags comparison cannot test whether missingness drives results. |
+| Zero gain for all `*_measured` flags confirmed in seeds 0-9 of the 100-seed run | Flags are supplementary only. |
+| Missingness sensitivity = nolactate variant (drop all lactate_*) | Lactate is the only variable with substantial missingness (27.88%). Caveat: this removes both the lactate value and its ordering pattern, so the two cannot be separated. |
 
-## 7. Phase 3 plan (NEXT) - baseline model + standard conformal
+## 7. Phase 3 - baseline model + standard conformal
 
 - Predictor **allow-list** (never "all other columns"): anchor_age, sex,
   vital features, gcs_min, intubated, lab features, (+ `*_measured` in the
-  flag variant). **Forbidden as predictors:** subject_id, hadm_id, stay_id,
+  supplementary-only flag variant). **Forbidden as predictors:** subject_id, hadm_id, stay_id,
   intime, outtime, **los**, age_group, anchor_year_group, race_group,
   insurance_group, mortality. (`los` and `outtime` are known only after ICU
   exit, i.e. future information. Assert none are in X.)
@@ -201,6 +202,40 @@ unlikely to be explained mainly by differential missingness.
 - Sanity flags: AUROC above about 0.95 suggests leakage; coverage far from 90%
   suggests a bug.
 
+### Phase 3 status (100-seed results)
+
+- Conformal quantile uses the exact k-th order statistic,
+  k = ceil((n+1)(1-alpha)); exact-rank unit tests pass.
+- Primary noflags, alpha 0.10: mean AUROC 0.8726, Brier 0.0706, calibration
+  slope 1.0033. Marginal coverage 0.9002 overall, 0.2352 for deaths, and
+  0.9794 for survivors. Class-conditional coverage is 0.9003 overall, 0.9014
+  for deaths, and 0.9002 for survivors; mean set size 1.257, with 25.70% of
+  sets {0,1}. Always predicting {0} covers 0.8935 because mortality is 10.65%.
+  Do not report marginal coverage without the per-class numbers.
+- Nolactate, alpha 0.10 (Phase 3 sensitivity only): mean AUROC 0.8695, a
+  decrease of 0.0031 from noflags; marginal coverage 0.9002 overall and
+  class-conditional coverage 0.9002 overall (0.9013 for deaths); mean set size
+  1.261. This does not establish results for Phases 4-5.
+- Noflags, alpha 0.05: mean marginal coverage 0.9504; death coverage 0.5544
+  (2.5th-97.5th percentiles 0.5144-0.5868), survivor coverage 0.9976.
+  Class-conditional coverage is 0.9508 for deaths and 0.9503 for survivors;
+  mean set size 1.431, with 43.14% of sets {0,1}. Marginal sets at alpha 0.05
+  cover 55.4% of deaths.
+- The bound (0.95 - 0.8935) / 0.1065 = 0.5305 assumes survivors are fully
+  covered; it is a mean-level bound, not a per-split one. Some seed-level death
+  coverage is below 0.53 because overall coverage varies across random splits
+  (test and calibration sampling), e.g. 0.9456 in some splits, which allows
+  death coverage near 0.518.
+- Measured-flag gain was zero in seeds 0-9. Across 100 seeds, best_iteration
+  averaged 326 for noflags at alpha 0.10 (early stopping worked); forbidden
+  columns were excluded. In the primary noflags model (seed 0) the highest-
+  ranked features by gain were BUN, lactate, GCS, respiratory rate,
+  bicarbonate and sodium; intubation ranked 12th and age 13th. The script
+  exports XGBoost importance_type="gain".
+- Percentiles and SDs reported for the 100 runs describe split-to-split
+  variability (random train/calibration/test splits), not confidence
+  intervals for the true coverage.
+
 ## 8. Later phases (summary)
 
 - **Phase 4:** subgroup coverage from `phase3_test_predictions.parquet`;
@@ -213,8 +248,8 @@ unlikely to be explained mainly by differential missingness.
 - **Phase 7:** set-size cost per subgroup; write-up.
 - **Secondary analyses:** temporal split using `anchor_year_group` (train and
   calibrate on older years, test on 2020-2022) to show exchangeability
-  breaking; with/without `*_measured`; GCS sensitivity; alternative race
-  mapping; alpha = 0.05.
+  breaking; supplementary-only `*_measured` flags; GCS sensitivity; alternative
+  race mapping; alpha = 0.05.
 
 ## 9. Verify before citing or submitting (UNVERIFIED items)
 
@@ -232,6 +267,8 @@ unlikely to be explained mainly by differential missingness.
   hadm_id: not checked by us; do not put in the paper without checking.
 - Whether "no prior conformal study covers multi-attribute ICU mortality" is
   still true at submission time: repeat the literature search.
+- SD and percentiles from the 2-seed smoke run are superseded; report the
+  100-seed results.
 
 ## 10. Limitations to write
 
@@ -268,10 +305,21 @@ imputed before modelling.
 to evaluate model and uncertainty performance; race and insurance were not
 model inputs.
 
+## Methods wording (approved)
+
+Missing values were handled natively by XGBoost without imputation.
+Missing-indicator flags had zero importance in seeds 0-9 and were therefore
+redundant. As a Phase 3 sensitivity analysis, we repeated the analysis
+excluding lactate, the only variable with substantial missingness (27.9%).
+
+This wording covers Phase 3 only; do not claim all analyses excluded lactate
+until the nolactate variant has been run for Phases 3-5. The zero-importance
+claim is verified for seeds 0-9.
+
 ## 12. Open questions for the researcher
 
 1. Final alpha: 0.10 only, or also 0.05?
-2. Keep `*_measured` flags in the main model, or only in the sensitivity run?
+2. Check whether measured flags have zero gain for seeds 10-99.
 3. Which pairs of attributes (if any) to analyse jointly in Phase 4-5?
 4. Target journal and reporting guideline (TRIPOD+AI is likely relevant).
 

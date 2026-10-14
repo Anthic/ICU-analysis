@@ -1,5 +1,10 @@
 # Coding Rules
 
+## Phase 3 predictor allow-list
+- Build model predictors only from the explicit Phase 3 allow-list: `anchor_age`, binary `sex` (Male=1, Female=0), all vital and laboratory `*_min`, `*_max`, and `*_mean` features, `gcs_min`, and `intubated`. Include `*_measured` flags only when `USE_MEASURED_FLAGS=True`.
+- Never infer predictors by excluding metadata columns. Assert that `subject_id`, `hadm_id`, `stay_id`, `intime`, `outtime`, `los`, `age_group`, `anchor_year_group`, `race_group`, `insurance_group`, and `mortality` are absent from X.
+- Run both flag settings and suffix every Phase 3 artifact `_flags` or `_noflags`.
+
 ## Language & libraries
 - Python 3.10+, pandas, numpy, scikit-learn, xgboost.
 - Conformal prediction: prefer `mapie` or `crepes`; if a needed method isn't
