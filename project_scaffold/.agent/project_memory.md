@@ -307,11 +307,20 @@ unlikely to be explained mainly by differential missingness.
 - **Intersectional pairs:** `race_group x sex` (10 cells) and `age_group x insurance_group` (16 cells) evaluated. `race_group x insurance_group` was removed/labeled as "dropped pair" due to small cell sample sizes (<50 deaths/seed in almost all cells). Cells with <50 deaths/seed are flagged UNSTABLE.
 - **Visualization:** `outputs/figures/phase5_mondrian_coverage_by_group_noflags_a010.png`.
 
+### Phase 7 status (Trade-off Analysis & Write-up) - GENERATED - PENDING REVIEW
+
+- **Script:** src/evaluation/07_tradeoff_analysis.py
+- **Data Source:** outputs/tables/phase7_tradeoff_efficiency_analysis.csv (100 seeds, noflags, alpha = 0.10)
+- **Paper Table:** paper/tables/table8_tradeoff_efficiency_analysis.md
+- **Key Visualization:** outputs/figures/phase7_width_vs_fairness.png (300 DPI, 3-panel publication figure: Panel A Fairness vs Efficiency slope, Panel B Mondrian Marginal collapse trap, Panel C Subgroup set-size delta).
+- **Primary Finding:** Restoring exact 90% subgroup class-conditional coverage incurs an efficiency penalty of only +0.005 to +0.058 labels per patient across all demographic subgroups (+2.57% for age 18-49; +1.49% for age 75+).
+- **Draft Paper Manuscript:** Complete Results and Discussion sections drafted in paper/results_draft.md complying with TRIPOD+AI and STROBE standards.
+
 ## 8. Later phases (summary)
 
 - **Phase 6:** eICU-CRD external validation, per hospital where possible.
   Needs eICU download and a harmonization of variables and subgroup labels.
-- **Phase 7:** set-size cost per subgroup; write-up.
+- **Phase 7:** set-size cost per subgroup; write-up (Completed: phase7_width_vs_fairness.png, 	able8_tradeoff_efficiency_analysis.md, paper/results_draft.md).
 - **Secondary analyses:** temporal split using `anchor_year_group` (train and
   calibrate on older years, test on 2020-2022) to show exchangeability
   breaking; supplementary-only `*_measured` flags; GCS sensitivity; alternative
