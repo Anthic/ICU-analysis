@@ -57,3 +57,55 @@ def fit_class_conditional(y_cal, p_cal, alpha: float = 0.10) -> np.ndarray:
             raise ValueError(f"calibration data contain no examples of class {label}")
         quantiles.append(conformal_quantile(class_scores, alpha))
     return np.asarray(quantiles)
+
+
+def fit_mondrian_marginal(y_cal, p_cal, groups_cal, alpha: float = 0.10) -> dict[str, float]:
+    """Fit group-conditional conformal prediction (Mondrian) quantiles per group."""
+    y_cal = np.asarray(y_cal, dtype=int)
+    scores = true_label_scores(y_cal, p_cal)
+    groups_cal = np.asarray(groups_cal, dtype=str)
+    quantiles = {}
+    for g in np.unique(groups_cal):
+        mask = groups_cal == g
+        quantiles[g] = conformal_quantile(scores[mask], alpha)
+    return quantiles
+
+
+def fit_mondrian_class_conditional(
+    y_cal, p_cal, groups_cal, alpha: float = 0.10
+) -> dict[str, np.ndarray]:
+    """Fit group-by-class conditional conformal prediction quantiles per (group, class)."""
+    y_cal = np.asarray(y_cal, dtype=int)
+    scores = true_label_scores(y_cal, p_cal)
+    groups_cal = np.asarray(groups_cal, dtype=str)
+    quantiles = {}
+    for g in np.unique(groups_cal):
+        g_quantiles = []
+        for label in (0, 1):
+            mask = (groups_cal == g) & (y_cal == label)
+            if not mask.any():
+                g_quantiles.append(float("inf"))
+            else:
+                g_quantiles.append(conformal_quantile(scores[mask], alpha))
+        quantiles[g] = np.asarray(g_quantiles)
+    return quantiles
+
+
+def prediction_sets_mondrian(
+    p_hat, groups, group_quantiles: dict[str, float | np.ndarray]
+) -> np.ndarray:
+    """Compute prediction sets for test data given group-specific quantiles."""
+    p_hat = np.asarray(p_hat, dtype=float)
+    groups = np.asarray(groups, dtype=str)
+    n = len(p_hat)
+    sets = np.zeros((n, 2), dtype=bool)
+    for g, q in group_quantiles.items():
+        mask = groups == g
+        if not mask.any():
+            continue
+        p_sub = p_hat[mask]
+        sets[mask] = prediction_sets(p_sub, q)
+    unseen = ~np.isin(groups, list(group_quantiles.keys()))
+    if unseen.any():
+        sets[unseen] = True
+    return sets

@@ -26,7 +26,7 @@ looks clinically plausible, e.g. ICU mortality roughly 10–15%).
 - Location: `src/models/03_train_baseline.py`, `src/conformal/03b_split_conformal.py`
 - Output: `outputs/results/phase3_baseline_metrics.json`,
   `outputs/results/phase3_conformal_intervals.parquet`
-- Logic: train/calibration/test split (e.g. 60/20/20), XGBoost classifier,
+- Logic: train/calibration/test split (50/25/25), XGBoost classifier,
   then split conformal prediction on the calibration set to get per-patient
   prediction sets/intervals at a chosen nominal level (e.g. 90%).
 

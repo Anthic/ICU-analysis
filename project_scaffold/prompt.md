@@ -1,37 +1,21 @@
-I authorize ONLY these edits to .agent/project_memory.md and
-paper/project_memory.md. Do not change anything else.
+Do not run any new analysis. Do not edit any memory file yet.
+Propose the edits below as text only; I will confirm.
 
-1. Phase 3 status: add "Noflags, alpha 0.05, class-conditional": coverage
-   0.9508 for deaths and 0.9503 for survivors, mean set size 1.431, 43.14%
-   of sets are {0,1}; marginal sets at alpha 0.05 still cover only 55.4% of
-   deaths.
-
-2. Replace "due to finite test-sample variation" with: "because overall
-   coverage varies across random splits (test and calibration sampling), e.g.
-   0.9456 in some splits, which allows death coverage near 0.518". Also write
-   the bound as (0.95 - 0.8935) / 0.1065 = 0.5305 (assumes survivors fully
-   covered; a mean-level bound, not a per-split one).
-
-3. Replace "Seed-0 gain leaders included ..." with: "In the primary noflags
-   model (seed 0) the highest-ranked features by gain were BUN, lactate, GCS,
-   respiratory rate, bicarbonate and sodium; intubation ranked 12th and age
-   13th." State which XGBoost importance_type the script exports.
-
-4. Add: "Percentiles and SDs reported for the 100 runs describe split-to-split
-   variability (random train/calibration/test splits), not confidence
-   intervals for the true coverage."
-
-5. Resolve duplicates: the zero-gain decision appears around lines 156-157
-   and 183. Keep one decision row. Text: "Zero gain for all *_measured flags
-   confirmed in seeds 0-9 of the 100-seed run; seeds 10-99 pending." Move
-   "seeds 10-99" to open items only.
-
-6. After editing, print (a) lines containing "Methods wording (approved)"
-   through the end of that section, and (b) a check that no non-English or
-   garbled word appears anywhere in the file. Also show the output of the unit
-   tests (including the exact-rank test) by running them now.
-
-
-   ৪. একটা সতর্কতা
-
-Memory ফাইল এখন প্রায় paper-এর রেকর্ড হয়ে যাচ্ছে। প্রতিটা সংখ্যার পাশে কোন ফাইল থেকে এসেছে (যেমন phase3_baseline_metrics_noflags_a010.json) লিখে রাখা ভালো, যাতে paper-এ বসানোর সময় যাচাই করা যায়। Agent-কে পরের আপডেটে এটা যোগ করতে বলতে পারো।--Likhe rakhba
+1. Source files: in table4, table5 and table7, print the exact script and
+   input file names that produced every number (including paired bootstrap CIs).
+2. Wording proposals: table4 takeaway: replace "mean improvement is clear" with
+   "the mean shift toward nominal 90% is clear for groups with a gap; delta varies
+   a lot between splits". table6: remove "catastrophically"; say the survivor
+   majority "likely" dominates the threshold (not tested). table7 note: use "Lower
+   survivor coverage than White" and add "exploratory; many comparisons; CI is
+   an indication only". Variance sentence: "7-50% larger in all groups except
+   Other/Unknown insurance (80%)".
+3. Add the status line "GENERATED - PENDING REVIEW" to the header of table3..7.
+4. Delta set size (Mondrian minus global) is not covered by independent_check.py.
+   Extend the script (still no shared helpers) to recompute it, plus Mondrian-marginal
+   death coverage (table6), for all 4 age groups and all 4 insurance groups, and show
+   PASS/FAIL with tolerance 0.0005. Also print the import lines of
+   independent_check.py.
+5. Propose the status wording: "Phase 4-5 (noflags, a010): VERIFIED for the groups and
+   metrics listed in independent_check.py; all other values GENERATED".
+Stop when done and wait for me.

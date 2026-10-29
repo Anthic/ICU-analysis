@@ -75,7 +75,10 @@ This document records all critical architectural decisions, clinical rationale, 
 ---
 
 ## 4. Current State & Next Steps
-- **Environment:** Dedicated Python 3.14 virtual environment `.venv` with `uv`, all 126+ dependencies installed (xgboost, lightgbm, scikit-learn, mapie, crepes, statsmodels, pyarrow, fastparquet).
-- **Phase 1:** Complete and validated (`cohort.parquet`).
-- **Phase 2:** Fully coded, debugged, and smoke-tested (`02_build_features.py`). Vitals checkpoint intact. Running full execution generates `features.parquet` and stratified missingness reports.
-- **Phase 3:** Baseline Model Training (XGBoost, 60/20/20 Train/Calibration/Test split) and Standard Split Conformal Prediction.
+- **Environment:** Dedicated Python virtual environment `.venv`, all dependencies installed and validated.
+- **Phase 1:** Complete and validated (`cohort.parquet`, 51,838 patients, 10.65% in-hospital mortality).
+- **Phase 2:** Complete and validated (`features.parquet`, 51,838 rows x 72 features, vitals + labs).
+- **Phase 3:** Complete across 100 seeds with 50/25/25 Train/Calibration/Test split (AUROC 0.8726, marginal death undercoverage 23.52%, class-conditional death coverage 90.14%).
+- **Phase 4:** Subgroup coverage audit complete across race, sex, age, and insurance (`phase4_subgroup_coverage.csv`, `phase4_coverage_by_group.png`).
+- **Phase 5:** Mondrian Conformal Prediction complete across 100 seeds (`phase5_mondrian_intervals.parquet`, `phase5_subgroup_coverage_corrected.csv`, `phase5_mondrian_coverage_by_group_noflags_a010.png`). Restored nominal 90% death and survivor coverage across all single and intersectional subgroups.
+- **Next Phase:** Phase 6 (eICU-CRD external validation) and Phase 7 (trade-off efficiency analysis & manuscript write-up).

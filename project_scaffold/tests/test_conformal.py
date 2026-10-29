@@ -4,7 +4,10 @@ from src.conformal.utils import (
     conformal_quantile,
     fit_class_conditional,
     fit_marginal,
+    fit_mondrian_class_conditional,
+    fit_mondrian_marginal,
     prediction_sets,
+    prediction_sets_mondrian,
 )
 
 
@@ -49,3 +52,42 @@ def test_conformal_quantile_exact_order_statistic_ranks():
     assert conformal_quantile(np.arange(1, 20), alpha=0.10) == 18
     assert conformal_quantile(np.arange(1, 10), alpha=0.10) == 9
     assert np.isinf(conformal_quantile(np.arange(1, 9), alpha=0.10))
+
+
+def test_mondrian_marginal_coverage_per_group():
+    rng = np.random.default_rng(42)
+    n_cal, n_test = 6000, 12000
+    groups_pool = np.array(["A", "B", "C"])
+    g_cal = rng.choice(groups_pool, n_cal)
+    g_test = rng.choice(groups_pool, n_test)
+    y_cal = rng.binomial(1, 0.3, n_cal)
+    y_test = rng.binomial(1, 0.3, n_test)
+    p_cal = np.clip(0.2 + 0.6 * y_cal + rng.normal(0, 0.2, n_cal), 0.01, 0.99)
+    p_test = np.clip(0.2 + 0.6 * y_test + rng.normal(0, 0.2, n_test), 0.01, 0.99)
+
+    q_mondrian = fit_mondrian_marginal(y_cal, p_cal, g_cal, alpha=0.10)
+    sets = prediction_sets_mondrian(p_test, g_test, q_mondrian)
+    for g in groups_pool:
+        mask = g_test == g
+        cov = sets[mask, y_test[mask]].mean()
+        assert abs(cov - 0.90) < 0.03
+
+
+def test_mondrian_class_conditional_coverage_per_group_and_class():
+    rng = np.random.default_rng(999)
+    n_cal, n_test = 8000, 16000
+    groups_pool = np.array(["G1", "G2"])
+    g_cal = rng.choice(groups_pool, n_cal)
+    g_test = rng.choice(groups_pool, n_test)
+    y_cal = rng.binomial(1, 0.25, n_cal)
+    y_test = rng.binomial(1, 0.25, n_test)
+    p_cal = np.clip(0.15 + 0.7 * y_cal + rng.normal(0, 0.25, n_cal), 0.01, 0.99)
+    p_test = np.clip(0.15 + 0.7 * y_test + rng.normal(0, 0.25, n_test), 0.01, 0.99)
+
+    q_mondrian_cc = fit_mondrian_class_conditional(y_cal, p_cal, g_cal, alpha=0.10)
+    sets = prediction_sets_mondrian(p_test, g_test, q_mondrian_cc)
+    for g in groups_pool:
+        for label in (0, 1):
+            mask = (g_test == g) & (y_test == label)
+            cov = sets[mask, label].mean()
+            assert abs(cov - 0.90) < 0.035
