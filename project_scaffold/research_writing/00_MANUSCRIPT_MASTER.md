@@ -141,3 +141,23 @@ To guarantee reproducibility, an isolated verification script (`src/evaluation/i
 16. Obermeyer Z, Powers B, Vogeli C, Mullainathan S. Dissecting racial bias in an algorithm used to manage the health of populations. *Science*. 2019;366(6464):447-453.
 17. Goldberger AL, Amaral LA, Glass L, et al. PhysioBank, PhysioToolkit, and PhysioNet: Components of a new research resource for complex physiologic signals. *Circulation*. 2000;101(23):e215-e220.
 
+
+---
+
+## 6. Figure Legends & Visual Artifacts
+
+### Figure 1: Clinical Fairness Shield (Radar / Spider Chart)
+- **File:** `outputs/figures/figure_radar_fairness_shield.png`
+- **Caption:** **Figure 1. Empirical Subgroup Death-Label Coverage Across 15 Demographic Strata.** Polar radar chart displaying class-conditional coverage among decedents ($y=1$) under baseline global split conformal prediction (Navy line), naive Mondrian marginal conformal prediction (Red dotted line), and Mondrian class-conditional conformal prediction (Teal line) against the nominal 90.0% target coverage boundary (Red dashed ring). Baseline global conformal prediction exhibits notable inward indentation for young adults aged 18–49 (84.06%), Hispanic patients (87.62%), and privately insured patients (86.60%). Naive Mondrian marginal calibration suffers catastrophic collapse towards the origin (11.77% to 39.79% coverage). Mondrian class-conditional calibration enforces an equitable, uniform 90% protective coverage shield across all demographic axes.
+
+### Figure 2: Subgroup Class-Conditional Death Coverage (Lancet-Style Forest Plot)
+- **File:** `outputs/figures/figure_forest_subgroup_coverage.png`
+- **Caption:** **Figure 2. Subgroup Death Coverage and Paired Calibration Differences Across 100 Random Splits.** Subgroup forest plot displaying point estimates and uncertainty bounds across 15 demographic strata (Age, Insurance, Race/Ethnicity, Biological Sex, and Overall). Baseline global conformal coverage is depicted by Navy circles with patient-level bootstrap 95% confidence intervals ($B = 1,000$ iterations). Mondrian class-conditional coverage is depicted by Teal diamonds with 2.5th–97.5th percentile across-seed empirical split ranges. The red dashed vertical line indicates nominal 90.0% coverage. Paired differences ($\Delta = \text{Mondrian} - \text{Global}$) and exact coverage intervals are tabulated adjacent to each stratum.
+
+### Figure 3: Clinical Utility and Prediction Set Composition Breakdown
+- **File:** `outputs/figures/figure_stacked_set_composition.png`
+- **Caption:** **Figure 3. Prediction Set Composition and Efficiency Across Demographic Subpopulations.** 100% horizontal stacked bar chart showing the distribution of output prediction set topologies for each demographic stratum under baseline global split conformal prediction (upper bar) and Mondrian class-conditional calibration (lower bar). Blue segments denote informative singleton predictions ({survive} or {die}). Amber/Orange segments denote inconclusive dual predictions ({survive, die}). Even after enforcing exact group-conditional coverage, >82% of patients across all subgroups retain definitive singleton predictions, demonstrating that fairness guarantees do not compromise clinical decision-support utility.
+
+### Figure 4: Miscalibration (CITL) vs Conformal Coverage Disparity
+- **File:** `outputs/figures/figure_citl_vs_coverage_bubble.png`
+- **Caption:** **Figure 4. Relationship Between Calibration-in-the-Large (CITL) and Conformal Death Coverage Disparity.** Scatter plot mapping baseline demographic CITL ($\bar{p} - \bar{y}$, expressed in $10^{-3}$) on the horizontal axis against empirical class-conditional death coverage on the vertical axis. Bubble diameters are proportional to subgroup sample sizes ($N_{\text{test}}$). Negative CITL corresponds to systematic risk under-prediction, partially accounting for empirical under-coverage in younger adult cohorts.

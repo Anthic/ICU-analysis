@@ -247,3 +247,43 @@
 - সকল টেবিল: [`paper/tables/`](file:///d:/dataset/icu_conformal_fairness_project%20(1)/project_scaffold/paper/tables/)
 - সকল ফিগার: [`outputs/figures/`](file:///d:/dataset/icu_conformal_fairness_project%20(1)/project_scaffold/outputs/figures/)
 
+
+---
+
+# পার্ট ৫: সদ্য তৈরি হওয়া ৪টি ইউনিক পাবলিকেশন ফিগার ও তাদের ব্যাখ্যা
+
+আমরা পেপারের জন্য ৪টি অত্যন্ত আকর্ষণীয় এবং হাই-রেজোলিউশন (300 DPI) গ্রাফ তৈরি করে [`outputs/figures/`](file:///d:/dataset/icu_conformal_fairness_project%20(1)/project_scaffold/outputs/figures/) ফোল্ডারে সেভ করেছি। পেপারে এগুলোর ক্যাপশন ও ব্যবহারের নিয়ম নিচে দেওয়া হলো:
+
+### ১. Clinical Fairness Shield (রাডার / স্পাইডার চার্ট)
+- **ফাইলের নাম:** [`outputs/figures/figure_radar_fairness_shield.png`](file:///d:/dataset/icu_conformal_fairness_project%20(1)/project_scaffold/outputs/figures/figure_radar_fairness_shield.png)
+- **গ্রাফের অর্থ:** 
+  - চারপাশের অক্ষগুলোতে ১৫টি সাবগ্রুপ রয়েছে।
+  - লাল ড্যাশড লাইনটি হলো নমিনাল ৯০% কভারেজের টার্গেট রিং।
+  - **গ্লোবাল কনফরমাল (নীল রেখা):** দেখা যাচ্ছে তরুণ বয়সে (১৮–৪৯) ভিতরে দেবে গেছে (৮৪% কভারেজ)।
+  - **নাইভ মন্ড্রিয়ান (লাল রেখা):** ধসে কেন্দ্রের দিকে গুটিয়ে গেছে (১১%–৩৯% কভারেজ)।
+  - **মন্ড্রিয়ান ক্লাস-কন্ডিশনাল (সবুজ রেখা):** নিখুঁত ৯০% বৃত্তের ওপর একটি অভেদ্য সুরক্ষাবলয় বা শিল্ডের মতো ছড়িয়ে আছে।
+- **ক্লিনিক্যাল টেক-অ্যাওয়ে:** রিভিউয়ার দেখলেই বুঝবেন আমাদের মেথড সব ডেমোগ্রাফিক গ্রুপে সমতা নিশ্চিত করে।
+
+### ২. Lancet-Style Subgroup Forest Plot (ফরেস্ট প্লট)
+- **ফাইলের নাম:** [`outputs/figures/figure_forest_subgroup_coverage.png`](file:///d:/dataset/icu_conformal_fairness_project%20(1)/project_scaffold/outputs/figures/figure_forest_subgroup_coverage.png)
+- **গ্রাফের অর্থ:** *The Lancet* এবং *JAMA*-র মতো শীর্ষ জার্নালের স্ট্যান্ডার্ড ফরেস্ট প্লট।
+  - বাম পাশে ক্যাটাগরিভিত্তিক সাবগ্রুপের নাম।
+  - মাঝখানে গ্লোবাল পয়েন্ট (নীল বৃত্ত + ৯৫% সিআই) বনাম মন্ড্রিয়ান পয়েন্ট (সবুজ ডায়মন্ড + স্প্লিট রেঞ্জ)।
+  - ডান পাশে স্পষ্ট টেবিল আকারে গ্লোবাল কভারেজ, মন্ড্রিয়ান কভারেজ এবং ডেল্টা ($\Delta$) লেখা রয়েছে।
+- **ক্লিনিক্যাল টেক-অ্যাওয়ে:** যেকোনো মেডিকেল রিভিউয়ার এই প্লট দেখে তথ্যের গভীরতা সম্পর্কে নিশ্চিত হবেন।
+
+### ৩. Prediction Set Composition Breakdown (ক্লিনিক্যাল ইউটিলিটি স্ট্যাকড বার চার্ট)
+- **ফাইলের নাম:** [`outputs/figures/figure_stacked_set_composition.png`](file:///d:/dataset/icu_conformal_fairness_project%20(1)/project_scaffold/outputs/figures/figure_stacked_set_composition.png)
+- **গ্রাফের অর্থ:** 
+  - প্রতিটি সাবগ্রুপের রোগীদের প্রেডিকশনের শতকরা ভাগ।
+  - নীল ও সবুজ অংশ: স্পষ্ট একক প্রেডিকশন {বাঁচবে} অথবা {মরবে}।
+  - হলুদ ও লাল অংশ: অনিশ্চিত {বাঁচবে, মরবে উভয়ই}।
+- **ক্লিনিক্যাল টেক-অ্যাওয়ে:** চার্টটি স্পষ্টভাবে প্রমাণ করে যে মন্ড্রিয়ান ফেয়ারনেস নিশ্চিত করার পরও **৮২% থেকে ৮৫% রোগী স্পষ্ট ও একক প্রেডিকশন পায়**, অর্থাৎ হাসপাতালের কার্যকারিতা এতটুকুও ব্যাহত হয় না।
+
+### ৪. CITL vs Coverage Disparity Bubble Plot (রিস্ক বায়াস বনাম কভারেজ বাবল চার্ট)
+- **ফাইলের নাম:** [`outputs/figures/figure_citl_vs_coverage_bubble.png`](file:///d:/dataset/icu_conformal_fairness_project%20(1)/project_scaffold/outputs/figures/figure_citl_vs_coverage_bubble.png)
+- **গ্রাফের অর্থ:**
+  - X-অক্ষ: মডেলের বেসলাইন ঝুঁকির বায়াস (CITL: ওভার-প্রেডিকশন নাকি আন্ডার-প্রেডিকশন)।
+  - Y-অক্ষ: কনফরমাল ডেথ কভারেজ।
+  - বাবল সাইজ: গ্রুপের রোগীর সংখ্যা।
+- **ক্লিনিক্যাল টেক-অ্যাওয়ে:** কীভাবে বেসলাইন রিস্ক আন্ডার-প্রেডিকশন তরুণদের ক্ষেত্রে কভারেজ ঘাটতি তৈরি করেছিল তা চোখে আঙুল দিয়ে দেখিয়ে দেয়।
