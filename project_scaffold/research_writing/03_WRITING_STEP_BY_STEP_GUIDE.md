@@ -36,7 +36,7 @@ Every top-tier journal paper (JAMIA, Lancet, Nature) uses the exact same 4-parag
 - **Paragraph 3: The Clinical Fairness Trap (The Problem)**  
   *Content:* In critical care, mortality is heavily imbalanced (~10%). If an algorithm covers 90% overall, it can achieve this by covering survivors while failing young or minority decedents. Prior clinical benchmarks (e.g. JMIR 2024 sepsis paper) acknowledged subgroup disparities as an open limitation.
 - **Paragraph 4: What This Paper Does (Specific Aims)**  
-  *Content:* We audit 51,838 MIMIC-IV ICU stays across 15 demographic subgroups over 100 independent splits. We show where standard conformal fails, prove why naive Mondrian conformal fails catastrophically, and demonstrate that class-conditional Mondrian conformal restores exact equity with negligible set-size cost.
+  *Content:* We audit 51,838 MIMIC-IV ICU stays across 15 demographic subgroups over 100 independent splits. We show where standard conformal fails, show why group conditioning without class conditioning leaves decedent coverage low (expected at ~10% prevalence), and report that class-conditional Mondrian calibration brings mean coverage to about 90% with a small average set-size cost.
 
 ---
 

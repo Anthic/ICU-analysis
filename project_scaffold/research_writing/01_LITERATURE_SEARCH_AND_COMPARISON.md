@@ -29,7 +29,7 @@ Copy and paste these exact query strings into [Google Scholar](https://scholar.g
 - **What they did:** They reported standard marginal coverage (~90%) across the overall ICU population.
 - **Their Open Limitation (Gap):** In their discussion/limitations, the authors explicitly stated that they did **not** audit demographic subgroup coverage and acknowledged that standard conformal prediction might not guarantee equal coverage across demographic minorities.
 - **How We Compare (Our Contribution):**
-  > *"Whereas recent benchmarks (e.g., JMIR 2024) demonstrated the viability of split conformal prediction for critical care mortality but cited demographic equity as an unaddressed limitation, our work provides the first systematic multi-attribute audit and resolves this gap by implementing class-conditional Mondrian conformal prediction across 51,838 patients."*
+  > *"Whereas recent benchmarks (e.g., JMIR 2024) demonstrated the viability of split conformal prediction for critical care mortality but cited demographic equity as an unaddressed limitation, our work provides a multi-attribute subgroup audit (age, sex, race/ethnicity, insurance) of class-conditional conformal prediction on the full MIMIC-IV first-ICU-stay cohort (N = 51,838) and quantifies the per-group set-size cost of group-by-class calibration. [Position against 2026 preprints on conformal ICU mortality/fairness; do not claim 'first'.]"*
 
 ### Paper 2: Foundational Conformal Prediction & Fairness Theory
 - **Key References:**
@@ -37,7 +37,7 @@ Copy and paste these exact query strings into [Google Scholar](https://scholar.g
   - *Romano, Sesia, & Candès (2020):* "Classification with Valid and Equal Coverage for Inconclusive Sets" (Introduced class-conditional split conformal prediction).
   - *Angelopoulos & Bates (2021):* "A Gentle Introduction to Conformal Prediction and Distribution-Free Uncertainty Quantification."
 - **How We Compare:**
-  > *"While theoretical frameworks establish that Mondrian conformal prediction yields valid group-conditional coverage asymptotically, their behavior under the severe class imbalance typical of clinical medicine (10% mortality) has remained unexplored. We show that unstratified group conditioning (Mondrian marginal) suffers a catastrophic mathematical failure (reducing death coverage to 11.8%), proving that simultaneous class- and group-conditioning is clinically mandatory."*
+  > *"While theoretical frameworks establish that Mondrian conformal prediction yields valid group-conditional coverage asymptotically, their behavior under the class imbalance typical of clinical medicine (~10% mortality) is rarely reported by subgroup. We illustrate that group conditioning without class conditioning leaves decedent coverage low (11.8%–39.8% by age group), as expected from marginal validity at this prevalence, and report group-by-class calibration as the appropriate alternative."*
 
 ### Paper 3: Clinical AI Fairness & Health Equity
 - **Key References:**
@@ -58,7 +58,7 @@ Use this table in your Introduction / Discussion section to contrast our study a
 | **Clinical Scope** | Overall ICU Sepsis / Mortality | Synthetic, Computer Vision, or General Tabular Data | **Comprehensive ICU First-Admissions (N = 51,838)** |
 | **Outcome Class Balance** | Evaluated marginally (dominated by ~90% survivors) | Balanced or moderately imbalanced benchmarks | **Acute Clinical Imbalance (10.65% in-hospital mortality)** |
 | **Subgroup Fairness Audit** | Omitted / acknowledged as limitation | Tested on 1–2 demographic attributes | **Systematic 15-subgroup audit (Age, Sex, Race, Insurance)** |
-| **Class vs Marginal Mondrian** | Not investigated | Assumed group conditioning suffices | **Discovered catastrophic failure of naive Mondrian marginal (11.8% death coverage)** |
+| **Class vs Marginal Mondrian** | Not investigated | Assumed group conditioning suffices | **Illustrated expected low decedent coverage of Mondrian marginal (11.8%–39.8% by age)** |
 | **Efficiency Penalty Quantified** | Not evaluated per demographic group | General set-size trade-offs reported | **Exact per-subgroup $\Delta \|S\|$ bounded within $\pm 0.058$ labels** |
 | **Methodological Rigor** | 1 to 5 data splits | Single-split or asymptotic simulations | **100 independent splits + 1,000 patient-level bootstrap iterations** |
 | **Reporting Standard** | General ML metrics | Standard accuracy / fairness metrics | **TRIPOD+AI & STROBE Clinical Reporting Compliance** |

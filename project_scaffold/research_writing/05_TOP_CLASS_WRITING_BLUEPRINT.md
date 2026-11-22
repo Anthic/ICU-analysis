@@ -28,9 +28,9 @@ Top-tier editors reject 80% of papers within 5 minutes because the papers read l
    - Baseline AUROC 0.8726.
    - Global calibration masks severe under-coverage of young decedents (84.06% for age 18–49, 5.9 pp below nominal).
    - Naive Mondrian marginal collapses death coverage to 11.77%–39.79%.
-   - Mondrian class-conditional restores exact 90% across all 15 subgroups (age 18–49 reaches 90.42%, paired gain +6.25 pp).
-   - Set-size cost is negligible (+0.029 labels, +2.57% for age 18–49; >82% singleton sets).
-4. **Discussion & Conclusion (2 sentences):** Emphasize that class-conditioning is non-negotiable in imbalanced medicine, and Mondrian conformal provides provable equity for bedside AI.
+   - Mondrian class-conditional gives approximately 90% mean coverage across all 15 subgroups (by construction; small strata variable) (age 18–49 reaches 90.42%, paired gain +6.25 pp).
+   - Set-size cost is negligible (+0.029 labels, +2.57% for age 18–49; singleton sets in 62%–87% of patients by stratum).
+4. **Discussion & Conclusion (2 sentences):** Emphasize that class-conditioning is needed for decedent coverage in imbalanced medicine, and Mondrian class-conditional calibration gives group-level coverage guarantees by construction under exchangeability.
 
 ---
 
@@ -55,7 +55,7 @@ Use the strict **4-Paragraph Formula**:
 - **Goal:** Show that standard conformal guarantees are only *marginal* across the whole population. In imbalanced ICU cohorts (10% mortality), the 90% guarantee is satisfied by covering survivors while failing vulnerable minorities.
 - **Key sentence starters:**
   - *"However, standard conformal prediction guarantees validity only marginally over the aggregate patient population [9]."*
-  - *"In clinical medicine, where acute mortality is heavily imbalanced (typically 8% to 15%) [10], an algorithm can achieve nominal 90% overall coverage entirely by capturing the vast survivor majority while systematically failing patients who die [11]."*
+  - *"In clinical medicine, where acute mortality is heavily imbalanced (typically 8% to 15%) [CITATION NEEDED: replace former ref 10, which is a length-of-stay paper], an algorithm can achieve nominal 90% overall coverage entirely by capturing the vast survivor majority while systematically failing patients who die [11]."*
   - *"Recent critical care benchmarks applying conformal prediction to sepsis mortality (e.g., Yang et al. in JMIR 2024) demonstrated aggregate feasibility but explicitly cited demographic subgroup fairness as an unresolved limitation [12]. Whether standard conformal prediction preserves equity across demographic strata—such as age, race, biological sex, and health insurance payer—remains fundamentally uncharacterized."*
 
 ### Paragraph 4: Specific Aims of This Paper
@@ -114,12 +114,12 @@ Walk the reader through the 5 acts, referencing the exact tables and figures:
   - When conditioning only on groups without classes, death coverage collapsed to **11.77%** for age 18–49 and **18.15%** for age 50–64.
   - Explain mechanism: ~89% survivor majority dominates the threshold.
 - **Act 4: The Mondrian Class-Conditional Solution (*Table 4, Table 5*)**
-  - Restores exact 90% across all groups (Age 18–49 death coverage reached **90.42%**, paired gain +6.25 pp).
+  - Approximately 90% mean coverage across all groups (by construction) (Age 18–49 death coverage reached **90.42%**, paired gain +6.25 pp).
   - Seed SD explanation: 3.6 pp seed SD of delta is test-sampling variation from ~151 deaths per split (*Table 5*).
 - **Act 5: The Negligible Efficiency Penalty (*Table 8, Figure 3A & 3C*)**
   - Set size delta $\Delta |S|$ bounded within $-0.060$ to $+0.058$ labels.
   - Age 18–49 set size increased by only **+0.029 labels (+2.57%)**.
-  - >82% of patients retain definitive singleton predictions {survive} or {die}.
+  - 62%–87% of patients per stratum retain definitive singleton predictions {survive} or {die} (age 18–49: 82%; age 75+: 62%).
 
 ---
 
@@ -133,7 +133,7 @@ Address these 4 pillars:
    - Under standard conformal, clinicians are falsely reassured when death is omitted for 16% of young dying patients.
    - Mondrian class-conditional guarantees that "90% means 90% for every patient, regardless of demographic background".
 3. **Methodological Lessons for Healthcare AI:**
-   - In clinical medicine with class imbalance, class conditioning is not optional—it is mathematically mandatory.
+   - In clinical medicine with class imbalance, class conditioning is needed to obtain meaningful decedent coverage.
 4. **Honest Limitations:**
    - Single-center development (MIMIC-IV); eICU external validation planned.
    - Coarse administrative race categories.

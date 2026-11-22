@@ -30,7 +30,7 @@
 ## 2. Cohort
 
 - **Total patients:** 51,838 (94,458 ICU stays → first stay per patient → LOS ≥ 24 h → age ≥ 18)
-- **In-hospital deaths (exact count from `cohort.parquet`):** **5,522** (10.66%)
+- **In-hospital deaths (exact count from `cohort.parquet`):** **5,522** (10.65%)
 - **Survivors:** 46,316
 
 > [!WARNING]

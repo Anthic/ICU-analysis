@@ -39,7 +39,7 @@ The extraction follows standard clinical informatics inclusion/exclusion hierarc
 | **2** | First ICU stay per patient | **65,366** | **29,092** | Prevents identical patient appearing across train, calibration, and test splits (data leakage) |
 | **3** | ICU Length of Stay (LOS) $\ge$ 24 hours | **51,838** | **13,528** | Standard benchmark window: model predicts mortality at exactly 24h of ICU care; excludes early discharges and hyper-acute deaths |
 | **4** | Adult patients (Age $\ge$ 18) | **51,838** | **0** | All first-stay patients surviving to 24h met the adult inclusion threshold |
-| **—** | **Final Analyzed Cohort** | **51,838** | — | **Mortality outcome rate: 10.65% (5,521 deaths)** |
+| **—** | **Final Analyzed Cohort** | **51,838** | — | **Mortality outcome rate: 10.65% (5,522 deaths)** |
 
 ### B. High-Volume Streaming & Windowing Pipeline
 MIMIC-IV `chartevents.csv.gz` contains over 300 million rows, and `labevents.csv.gz` exceeds 120 million rows. Extraction is implemented via scalable, deterministic pipeline (`src/data_processing/02_build_features.py`):

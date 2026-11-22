@@ -1,0 +1,13 @@
+{
+  "n_seeds": 100,
+  "split_mode": "hospital",
+  "alpha": 0.1,
+  "n_eicu_patients": 95558,
+  "eicu_mortality": 0.09298017957680152,
+  "n_hospitals": 207,
+  "P1_eicu_18_49_death_coverage": 0.9009628203658423,
+  "P2_eicu_75plus_survivor_coverage": 0.7482855353483445,
+  "hospitals_in_table": 103,
+  "hospital_death_coverage_sd": 0.045353576326700895,
+  "hospital_expected_sd_binomial_median": 0.03905667329424716
+}

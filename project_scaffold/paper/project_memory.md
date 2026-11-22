@@ -313,7 +313,7 @@ unlikely to be explained mainly by differential missingness.
 - **Data Source:** outputs/tables/phase7_tradeoff_efficiency_analysis.csv (100 seeds, noflags, alpha = 0.10)
 - **Paper Table:** paper/tables/table8_tradeoff_efficiency_analysis.md
 - **Key Visualization:** outputs/figures/phase7_width_vs_fairness.png (300 DPI, 3-panel publication figure: Panel A Fairness vs Efficiency slope, Panel B Mondrian Marginal collapse trap, Panel C Subgroup set-size delta).
-- **Primary Finding:** Restoring exact 90% subgroup class-conditional coverage incurs an efficiency penalty of only +0.005 to +0.058 labels per patient across all demographic subgroups (+2.57% for age 18-49; +1.49% for age 75+).
+- **Primary Finding:** Restoring nominal 90% subgroup class-conditional coverage (by construction under exchangeability) incurs an efficiency penalty of only +0.005 to +0.058 labels per patient across all demographic subgroups (+2.57% for age 18-49; +1.49% for age 75+).
 - **Draft Paper Manuscript:** Complete Results and Discussion sections drafted in paper/results_draft.md complying with TRIPOD+AI and STROBE standards.
 
 ## 8. Later phases (summary)

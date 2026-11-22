@@ -1,7 +1,7 @@
 # Table 6: Empirical Failure of Mondrian Marginal Conformal Prediction (EXPLORATORY)
 *Source: `outputs/tables/phase5_subgroup_coverage_corrected_noflags_a010.csv` (100 seeds, noflags, $\alpha = 0.10$)*
 
-> **Mechanism of Failure:** Group-conditional conformal prediction without class conditioning satisfies 90% overall group coverage but catastrophically undercovers patients who die (11.8% to 39.8%) because the ~89% survivor majority dominates each stratum's nonconformity threshold.
+> **Mechanism of Failure:** Group-conditional conformal prediction without class conditioning satisfies 90% overall group coverage but undercovers patients who die (11.8% to 39.8%), expected under ~10% prevalence, likely because the ~89% survivor majority dominates each stratum's nonconformity threshold (mechanism not separately tested).
 
 | Age Subgroup | Mondrian Marginal Death Coverage | Across-Seed Range [2.5%, 97.5%] | Mondrian Marginal Survivor Coverage |
 |---|---|---|---|

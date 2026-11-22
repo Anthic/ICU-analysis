@@ -1,0 +1,117 @@
+{
+  "n_seeds": 100,
+  "alpha": 0.1,
+  "dropped": [
+    "temperature",
+    "gcs_min",
+    "intubated"
+  ],
+  "corr": {
+    "mimic_test": {
+      "demographic_strata: AUROC vs death-coverage gap": {
+        "n": 15,
+        "spearman": -0.6,
+        "p": 0.018050087941499978
+      },
+      "demographic_strata: prevalence vs death-coverage gap": {
+        "n": 15,
+        "spearman": 0.7892857142857141,
+        "p": 0.0004673267561781763
+      },
+      "demographic_strata: mean_p_deaths vs death-coverage gap": {
+        "n": 15,
+        "spearman": 0.07857142857142857,
+        "p": 0.7807545523090464
+      }
+    },
+    "eicu_all": {
+      "demographic_strata: AUROC vs death-coverage gap": {
+        "n": 11,
+        "spearman": -0.7181818181818183,
+        "p": 0.012799598068858454
+      },
+      "demographic_strata: prevalence vs death-coverage gap": {
+        "n": 11,
+        "spearman": 0.8272727272727273,
+        "p": 0.0016769738964523809
+      },
+      "demographic_strata: mean_p_deaths vs death-coverage gap": {
+        "n": 11,
+        "spearman": 0.7090909090909092,
+        "p": 0.014552051953727713
+      },
+      "hospital: AUROC vs death-coverage gap": {
+        "n": 103,
+        "spearman": 0.42945475912631403,
+        "p": 5.991567672365825e-06
+      },
+      "hospital: prevalence vs death-coverage gap": {
+        "n": 103,
+        "spearman": 0.08094364696708438,
+        "p": 0.41633413805197156
+      },
+      "hospital: mean_p_deaths vs death-coverage gap": {
+        "n": 103,
+        "spearman": 0.7013228777226383,
+        "p": 1.5884064211788928e-16
+      }
+    }
+  },
+  "stability": [
+    {
+      "cal_deaths_bin": "<10",
+      "n_hosp_seed": 3309,
+      "share_inf_threshold": 0.8434572378362043,
+      "global_mean_abs_dev": 0.09382874539658244,
+      "hosp_mean_abs_dev": 0.09981961902585783,
+      "global_share_below_80": 0.08794197642792384,
+      "hosp_share_below_80": 0.023874282260501662,
+      "hosp_mean_cov": 0.9856411452403175,
+      "global_mean_cov": 0.9272540145227545
+    },
+    {
+      "cal_deaths_bin": "10-19",
+      "n_hosp_seed": 3898,
+      "share_inf_threshold": 0.0,
+      "global_mean_abs_dev": 0.0704106853574278,
+      "hosp_mean_abs_dev": 0.08387182426883785,
+      "global_share_below_80": 0.07208825038481273,
+      "hosp_share_below_80": 0.09132888660851719,
+      "hosp_mean_cov": 0.9270696585124683,
+      "global_mean_cov": 0.9223956653536137
+    },
+    {
+      "cal_deaths_bin": "20-39",
+      "n_hosp_seed": 3413,
+      "share_inf_threshold": 0.0,
+      "global_mean_abs_dev": 0.055777761939278005,
+      "hosp_mean_abs_dev": 0.06024151633007512,
+      "global_share_below_80": 0.07910928801640785,
+      "hosp_share_below_80": 0.07383533548198067,
+      "hosp_mean_cov": 0.9137492917577251,
+      "global_mean_cov": 0.9036157659829243
+    },
+    {
+      "cal_deaths_bin": "40-79",
+      "n_hosp_seed": 1941,
+      "share_inf_threshold": 0.0,
+      "global_mean_abs_dev": 0.04676027579267439,
+      "hosp_mean_abs_dev": 0.047480187558647066,
+      "global_share_below_80": 0.04636785162287481,
+      "hosp_share_below_80": 0.05409582689335394,
+      "hosp_mean_cov": 0.9076905273474573,
+      "global_mean_cov": 0.9015383741149812
+    },
+    {
+      "cal_deaths_bin": "80+",
+      "n_hosp_seed": 1383,
+      "share_inf_threshold": 0.0,
+      "global_mean_abs_dev": 0.031614549089904076,
+      "hosp_mean_abs_dev": 0.031068082187972256,
+      "global_share_below_80": 0.015184381778741865,
+      "hosp_share_below_80": 0.008676789587852495,
+      "hosp_mean_cov": 0.9048550925519699,
+      "global_mean_cov": 0.885314545364973
+    }
+  ]
+}

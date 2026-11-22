@@ -1,0 +1,6 @@
+step,n
+All eICU unit stays,200859
+First ICU stay per patient,139367
+ICU LOS >= 24h,96725
+Adult with valid age (>= 18),96473
+Known outcome and sex,95558
