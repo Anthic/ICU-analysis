@@ -122,7 +122,8 @@ def generate_figures():
     y_br = 97.5
     ax1_b.plot([x_d, x_d, x_s, x_s], [y_br - 1.2, y_br, y_br, y_br - 1.2],
                color="#991B1B", lw=1.4, zorder=6)
-    ax1_b.text(0, y_br + 0.8, "10.8 pp Coverage Gap\n(−5.9 pp vs Target)",
+    _gap = surv_cov[0] - death_cov[0]; _vs_target = death_cov[0] - 90.0
+    ax1_b.text(0, y_br + 0.8, f"{_gap:.1f} pp Coverage Gap\n({_vs_target:+.1f} pp vs Target)".replace("-", "−"),
                ha="center", va="bottom", fontsize=8.5, fontweight="bold", color="#991B1B",
                bbox=dict(boxstyle="round,pad=0.25", facecolor="#FEF2F2", edgecolor="#FECACA", lw=0.9),
                zorder=6)
