@@ -4,7 +4,7 @@ File: src/data_processing/11_extract_code_status.py
 Keeps itemids 223758 (Code Status), 228687 (Code Status., MD progress note), 229784 (Code Status (Intubation)).
 Input : <mimic>/icu/chartevents.csv.gz  (default: ../physionet.org/files/mimiciv/3.1/icu/chartevents.csv.gz relative to --mimic)
 Output: data/processed/mimic_code_status_raw.csv.gz  (stay_id, charttime, itemid, value)
-Usage : python src/data_processing/11_extract_code_status.py --chartevents "D:/dataset/physionet.org/files/mimiciv/3.1/icu/chartevents.csv.gz"
+Usage : python src/data_processing/11_extract_code_status.py --chartevents "<MIMIC_PATH>/icu/chartevents.csv.gz"
 """
 from __future__ import annotations
 import argparse, time

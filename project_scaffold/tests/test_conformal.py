@@ -93,22 +93,62 @@ def test_mondrian_class_conditional_coverage_per_group_and_class():
             assert abs(cov - 0.90) < 0.035
 
 
-def test_age_mondrian_equals_group_specific_thresholds():
-    """Age x class Mondrian sets are group-specific risk thresholds (equalised-odds-type post-processing)."""
-    rng = np.random.default_rng(7)
-    n = 6000
+def _simulate(seed=7, n=6000):
+    rng = np.random.default_rng(seed)
     groups = rng.choice(["a", "b", "c"], size=n)
     base = {"a": 0.05, "b": 0.12, "c": 0.25}
     p = np.clip(rng.beta(1, 8, size=n) * (1 + 3 * np.array([base[g] for g in groups])), 1e-4, 1 - 1e-4)
     y = (rng.random(n) < p).astype(int)
+    return y, p, groups
+
+
+def _independent_threshold(values, alpha=0.10):
+    """Order-statistic rule written out by hand, independent of src.conformal.utils."""
+    v = np.sort(np.asarray(values))
+    n = len(v)
+    k = int(np.ceil((n + 1) * (1 - alpha)))
+    return np.inf if k > n else v[k - 1]
+
+
+def test_age_mondrian_equals_group_specific_thresholds():
+    """Mondrian sets must equal sets from hand-computed group-specific risk thresholds
+    (survivor label in set iff p <= q0_g; death label in set iff 1-p <= q1_g), with q0/q1
+    taken from each group's calibration survivors/decedents only."""
+    y, p, groups = _simulate()
     q = fit_mondrian_class_conditional(y, p, groups, alpha=0.10)
     sets = prediction_sets_mondrian(p, groups, q)
     for g in ["a", "b", "c"]:
         m = groups == g
-        q0, q1 = q[g]
-        # survivor label in set iff p <= q0 ; death label in set iff 1 - p <= q1
-        np.testing.assert_array_equal(sets[m, 0], (1 - (1 - p[m])) <= q0 + 1e-12)
-        np.testing.assert_array_equal(sets[m, 1], (1 - p[m]) <= q1 + 1e-12)
+        q0 = _independent_threshold(p[m & (y == 0)])
+        q1 = _independent_threshold((1 - p)[m & (y == 1)])
+        np.testing.assert_allclose([q[g][0], q[g][1]], [q0, q1])
+        np.testing.assert_array_equal(sets[m, 0], p[m] <= q0)
+        np.testing.assert_array_equal(sets[m, 1], (1 - p[m]) <= q1)
+
+
+def test_group_thresholds_differ_when_score_distributions_differ():
+    """Equalised-odds-type difference: groups with different risk distributions get different thresholds."""
+    y, p, groups = _simulate()
+    q = fit_mondrian_class_conditional(y, p, groups, alpha=0.10)
+    assert len({round(q[g][0], 6) for g in "abc"}) == 3
+    assert len({round(q[g][1], 6) for g in "abc"}) == 3
+
+
+def test_no_leakage_from_test_labels_or_test_scores_into_thresholds():
+    """Thresholds depend only on calibration data: changing test labels cannot change test sets,
+    and permuting calibration labels must change thresholds."""
+    y, p, groups = _simulate()
+    ycal, pcal, gcal = y[:4000], p[:4000], groups[:4000]
+    ptest, gtest = p[4000:], groups[4000:]
+    q = fit_mondrian_class_conditional(ycal, pcal, gcal, alpha=0.10)
+    sets1 = prediction_sets_mondrian(ptest, gtest, q)
+    rng = np.random.default_rng(0)
+    _ytest_shuffled = rng.permutation(y[4000:])  # test labels are never passed to the pipeline
+    q2 = fit_mondrian_class_conditional(ycal, pcal, gcal, alpha=0.10)
+    sets2 = prediction_sets_mondrian(ptest, gtest, q2)
+    np.testing.assert_array_equal(sets1, sets2)
+    q3 = fit_mondrian_class_conditional(rng.permutation(ycal), pcal, gcal, alpha=0.10)
+    assert any(q3[g][1] != q[g][1] for g in "abc")
 
 
 def test_split_indices_are_disjoint_and_cover_all():

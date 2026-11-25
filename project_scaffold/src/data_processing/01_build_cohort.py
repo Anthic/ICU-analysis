@@ -26,7 +26,7 @@ import numpy as np
 # -------------------------------------------------------------
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 RAW_DATA_LOCAL = PROJECT_ROOT / "data" / "raw" / "mimic-iv"
-PHYSIONET_PATH = Path(os.environ.get("MIMIC_PATH", r"D:\dataset\physionet.org\files\mimiciv\3.1"))
+PHYSIONET_PATH = Path(os.environ.get("MIMIC_PATH", "data/raw/mimiciv/3.1"))
 
 OUTPUT_DIR = PROJECT_ROOT / "data" / "processed"
 RESULTS_DIR = PROJECT_ROOT / "outputs" / "results"
