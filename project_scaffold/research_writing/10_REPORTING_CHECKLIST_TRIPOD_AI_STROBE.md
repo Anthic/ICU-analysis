@@ -35,7 +35,7 @@ Status key: Done = reported in `00_MANUSCRIPT_MASTER.md`; Partial = reported but
 | Data source, dates, participants, eligibility | Done | 2.1, 2.6 |
 | Data preparation | Partial | Physiological plausibility filters stated; list units, time windows and harmonisation rules for eICU in a supplement |
 | Outcome definition and assessment | Done | In-hospital mortality; hospice discharge coded as survival (limitations, 2.11) |
-| Predictors | Done | 2.2; 66 predictors, harmonised 63 |
+| Predictors | Done | 2.2; 52 predictors, harmonised 47 |
 | Sample size justification | Partial | All eligible patients; add events-per-variable and the number of deaths per subgroup |
 | Missing data handling | Partial | See STROBE row |
 | Analytical methods: model type, hyperparameters, tuning, validation | Partial | Give the XGBoost hyperparameter table (from `03_train_baseline.py`, early stopping 50, 15% validation slice) |

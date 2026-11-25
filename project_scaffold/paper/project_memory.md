@@ -453,3 +453,4 @@ claim is verified for seeds 0-9.
 2026-11-25: R9 done (08b age-blind script, 100 seeds; metric versions labelled). Refs 1,3,5,17 verified; abstract refreshed.
 2026-11-25: Figures regenerated from CSV (Fig2 patched in generate_paper_master_figures.py; Fig3-5 in make_figures_3_4_5.py); Fig 4 shows raw and recalibrated; wording neutralised.
 2026-11-25: comparison note research_writing/13_COMPARISON_GAO_ZHONG_TASAR (Gao = abstract only, retry full text).
+2026-11-25: Gao 2026a comparison updated from user-supplied full-text summary (non-clinical, group-conditional not class-conditional, no calibration/base rate, no label-free, no EO).
