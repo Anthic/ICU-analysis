@@ -4,7 +4,7 @@
 
 **Authors:** [Author Names Anonymized for Peer Review / Author List]  
 **Affiliations:** [Department / Institution]  
-**Target Venue:** *International Journal of Medical Informatics* (primary) / *Journal of Biomedical Informatics* (alternative)  
+**Target Venue:** *Journal of Biomedical Informatics* (primary, subscription route) / *International Journal of Medical Informatics* (backup)  
 **Reporting Guidelines:** TRIPOD+AI & STROBE
 
 ---
