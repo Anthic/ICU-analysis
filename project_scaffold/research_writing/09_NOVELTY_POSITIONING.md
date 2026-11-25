@@ -124,3 +124,6 @@ Abstract-level reading only; no full texts; keyword search over a single index; 
 20. Johnson AEW, Bulgarelli L, Shen L, et al. MIMIC-IV, a freely accessible electronic health record dataset. Sci Data. 2023;10:1. doi:10.1038/s41597-022-01899-x
 21. Pollard TJ, Johnson AEW, Raffa JD, Celi LA, Mark RG, Badawi O. The eICU Collaborative Research Database, a freely available multi-center database for critical care research. Sci Data. 2018;5:180178. doi:10.1038/sdata.2018.178
 Existing manuscript references still to fix: former [10] (replace), [12] (author list now available: Yang M, Chen H, Hu W, Mischi M, Shan C, Li J, et al.; the OpenAlex record lists six authors followed by more).
+
+
+> 2026-11-24 update: the '~40 calibration deaths' rule in this document is superseded by the variance-versus-bias break-even in `paper/small_stratum_rule_NOTE.md` (about 90-110 deaths at hospital-level shortfalls of about 0.03; 14-36 deaths at shortfalls of 0.05-0.08). Treat the 40 figure as an empirical observation, not a rule.

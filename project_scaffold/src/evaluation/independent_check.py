@@ -1,10 +1,13 @@
-"""Independent recomputation check from scratch without using shared audit code."""
+"""Recomputation check of the Phase 4/5 summary tables from the saved per-patient test predictions and set columns.
+
+Scope: this re-aggregates the stored sets (coverage, set size, CITL) for all age, insurance and race subgroups; it does not re-derive the
+conformal thresholds or refit the model, so it checks aggregation, not the pipeline. Sex is not covered (no Mondrian sex column)."""
 
 from pathlib import Path
 import numpy as np
 import pandas as pd
 
-ROOT = Path(r"d:\dataset\icu_conformal_fairness_project (1)\project_scaffold")
+ROOT = Path(__file__).resolve().parents[2]
 P3_PATH = ROOT / "outputs" / "results" / "phase3_test_predictions_noflags_a010.parquet"
 P5_PATH = ROOT / "outputs" / "results" / "phase5_mondrian_intervals_noflags_a010.parquet"
 FEAT_PATH = ROOT / "data" / "processed" / "features.parquet"
@@ -27,14 +30,12 @@ feat["insurance_group"] = feat["insurance_group"].replace({"Other/Unknown": "Oth
 
 df = p3.merge(p5, on=["seed", "stay_id"]).merge(feat, on="stay_id")
 
-# Target groups
+# Target groups: every subgroup of age, insurance and race that has a Mondrian column
+_p4_groups = pd.read_csv(P4_CSV)
 targets = [
-    ("age_group", "18-49", "mondrian_cc_age_group"),
-    ("age_group", "75+", "mondrian_cc_age_group"),
-    ("insurance_group", "Medicare", "mondrian_cc_insurance_group"),
-    ("insurance_group", "Private", "mondrian_cc_insurance_group"),
-    ("race_group", "Hispanic", "mondrian_cc_race_group"),
-    ("race_group", "Other/Unknown (race)", "mondrian_cc_race_group"),
+    (attr, sg, f"mondrian_cc_{attr}")
+    for attr in ["age_group", "insurance_group", "race_group"]
+    for sg in _p4_groups.loc[_p4_groups["attribute"] == attr, "subgroup"]
 ]
 
 # Read CSV ground truths

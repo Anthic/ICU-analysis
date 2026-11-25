@@ -129,6 +129,29 @@ def make_table3():
     print("Wrote table3_phase4_subgroup_audit.md")
 
 
+
+def _paired_from_seeds():
+    base = pd.read_csv(P4_PER_SEED)
+    base = base[(base["method"] == "class_conditional_by_outcome") & (base["variant"] == "noflags") & (np.isclose(base["alpha"], 0.1))]
+    mond = pd.read_csv(P5_PER_SEED)
+    mond = mond[(mond["calibration_type"] == "mondrian_class_conditional") & (mond["variant"] == "noflags") & (np.isclose(mond["alpha"], 0.1))]
+    out = {}
+    for _, g in base.groupby(["attribute", "subgroup"]):
+        attr, sg = g["attribute"].iloc[0], g["subgroup"].iloc[0]
+        sg_m = "Other/Unknown" if sg.startswith("Other/Unknown") else sg
+        m = mond[(mond["stratification_attribute"] == attr) & (mond["subgroup"] == sg_m)]
+        if m.empty:
+            continue
+        j = g.merge(m, on="seed", suffixes=("_b", "_m"))
+        def fmt(col):
+            d = (j[col + "_m"] - j[col + "_b"]) * 100
+            return (f"{d.mean():+.2f} pp", f"[{np.percentile(d, 2.5):+.2f}, {np.percentile(d, 97.5):+.2f}]", f"{d.std(ddof=1):.2f} pp")
+        dd, ss = fmt("coverage_deaths"), fmt("coverage_survivors")
+        out[(attr, sg)] = dd + ss
+        if sg == "Other/Unknown":
+            out[(attr, "Other/Unknown (" + ("race" if attr == "race_group" else "insurance") + ")")] = dd + ss
+    return out
+
 # -------------------------------------------------------------
 # Table 4: Phase 5 Mondrian Comparison & Paired Differences
 # -------------------------------------------------------------
@@ -137,34 +160,18 @@ def make_table4():
     p5 = pd.read_csv(P5_CSV_PATH)
     p5_cc = p5[p5["calibration_type"] == "mondrian_class_conditional"]
 
-    # Precomputed bootstrap paired differences & delta seed SDs:
-    # (d_diff_boot, d_ci, d_seed_sd, s_diff_boot, s_ci, s_seed_sd)
-    paired_data = {
-        ("age_group", "18-49"): ("+6.25 pp", "[+5.21, +7.32]", "3.61 pp", "-4.94 pp", "[-5.22, -4.66]", "0.81 pp"),
-        ("age_group", "50-64"): ("+2.86 pp", "[+2.51, +3.25]", "1.53 pp", "-2.55 pp", "[-2.68, -2.44]", "0.58 pp"),
-        ("age_group", "65-74"): ("-0.22 pp", "[-0.34, -0.10]", "1.52 pp", "-1.06 pp", "[-1.13, -1.00]", "0.57 pp"),
-        ("age_group", "75+"): ("-2.96 pp", "[-3.28, -2.66]", "1.33 pp", "+7.10 pp", "[+6.85, +7.35]", "0.78 pp"),
-        ("insurance_group", "Medicaid"): ("+2.63 pp", "[+2.17, +3.13]", "2.30 pp", "-1.62 pp", "[-1.74, -1.50]", "0.70 pp"),
-        ("insurance_group", "Medicare"): ("-1.27 pp", "[-1.39, -1.15]", "0.85 pp", "+2.74 pp", "[+2.66, +2.83]", "0.33 pp"),
-        ("insurance_group", "Other/Unknown (insurance)"): ("-1.89 pp", "[-2.56, -1.23]", "4.14 pp", "-2.93 pp", "[-3.32, -2.61]", "1.54 pp"),
-        ("insurance_group", "Private"): ("+3.63 pp", "[+3.12, +4.21]", "1.77 pp", "-3.74 pp", "[-3.92, -3.56]", "0.60 pp"),
-        ("race_group", "Asian"): ("+2.66 pp", "[+1.53, +3.88]", "4.88 pp", "+1.29 pp", "[+1.08, +1.50]", "1.55 pp"),
-        ("race_group", "Black"): ("-0.13 pp", "[-0.41, +0.17]", "2.98 pp", "+0.96 pp", "[+0.87, +1.07]", "0.85 pp"),
-        ("race_group", "Hispanic"): ("+2.66 pp", "[+1.68, +3.77]", "4.69 pp", "-2.06 pp", "[-2.33, -1.80]", "1.47 pp"),
-        ("race_group", "Other/Unknown (race)"): ("-1.16 pp", "[-1.33, -1.00]", "1.35 pp", "+1.21 pp", "[+1.13, +1.29]", "0.57 pp"),
-        ("race_group", "White"): ("+0.47 pp", "[+0.41, +0.54]", "0.70 pp", "-0.36 pp", "[-0.38, -0.34]", "0.20 pp"),
-        ("sex", "Female"): ("-0.58 pp", "[-0.67, -0.49]", "1.07 pp", "+0.73 pp", "[+0.70, +0.77]", "0.40 pp"),
-        ("sex", "Male"): ("+0.55 pp", "[+0.48, +0.62]", "0.80 pp", "-0.52 pp", "[-0.55, -0.50]", "0.30 pp"),
-    }
+    # Paired differences computed from per-seed CSVs (Mondrian minus global class-conditional, same split/seed).
+    # (d_mean, d_range, d_seed_sd, s_mean, s_range, s_seed_sd); range = seed 2.5-97.5 percentile of the paired difference.
+    paired_data = _paired_from_seeds()
 
     lines = [
         "# Table 4: Mondrian Class-Conditional Calibration vs Baseline with Paired Differences",
         "*Source: `outputs/tables/phase4_rigorous_audit_noflags_a010.csv` and `outputs/tables/phase5_subgroup_coverage_corrected_noflags_a010.csv`*",
-        "*Estimator note: Paired difference estimates (Δ) and 95% CIs are patient-level bootstrap means (B = 1,000, fixed seed 42) of the difference between Mondrian and Global sets per patient across test appearances. Delta Seed SD reflects split-to-split empirical variation across the 100 seeds.*",
-        "> **Key Takeaway:** The mean improvement is clear, but the delta varies a lot from split to split (seed SD of the delta, e.g. 3.6 pp for age 18-49). Patient bootstrap CIs ignore calibration-set variability, which is the main source of variation for Mondrian cells.",
+        "*Estimator note: [REVISED 2026-11-25: Δ are now computed from per-seed CSVs: mean over 100 seeds of Mondrian minus global class-conditional coverage on the same split; bracket = 2.5-97.5 percentile of the seed-level differences; SD = seed SD.] [OLD TEXT, no longer used:] Paired difference estimates (Δ) and 95% CIs are patient-level bootstrap means (B = 1,000, fixed seed 42) of the difference between Mondrian and Global sets per patient across test appearances. Delta Seed SD reflects split-to-split empirical variation across the 100 seeds.*",
+        "> **Key Takeaway:** The mean improvement is clear, but the delta varies a lot from split to split (seed SD of the delta, e.g. 3.6 pp for age 18-49). The bracket is the 2.5-97.5 percentile of the seed-level paired differences, so it reflects split and calibration-set variability (it is a spread across splits, not a confidence interval for the population effect).",
         "",
         "### Primary Analysis: Age and Insurance Groups",
-        "| Attribute | Subgroup | Global CC Death | Mondrian CC Death [Seed Range] | Paired Δ Death [Boot 95% CI] | Δ Death Seed SD | Global CC Surv | Mondrian CC Surv [Seed Range] | Paired Δ Surv [Boot 95% CI] | Δ Surv Seed SD | Δ Set Size |",
+        "| Attribute | Subgroup | Global CC Death | Mondrian CC Death [Seed Range] | Paired Δ Death [seed 2.5-97.5%] | Δ Death Seed SD | Global CC Surv | Mondrian CC Surv [Seed Range] | Paired Δ Surv [seed 2.5-97.5%] | Δ Surv Seed SD | Δ Set Size |",
         "|---|---|---|---|---|---|---|---|---|---|---|",
     ]
 
@@ -188,7 +195,7 @@ def make_table4():
     lines.extend([
         "",
         "### Exploratory Analysis: Race/Ethnicity and Sex",
-        "| Attribute | Subgroup | Global CC Death | Mondrian CC Death [Seed Range] | Paired Δ Death [Boot 95% CI] | Δ Death Seed SD | Global CC Surv | Mondrian CC Surv [Seed Range] | Paired Δ Surv [Boot 95% CI] | Δ Surv Seed SD | Δ Set Size |",
+        "| Attribute | Subgroup | Global CC Death | Mondrian CC Death [Seed Range] | Paired Δ Death [seed 2.5-97.5%] | Δ Death Seed SD | Global CC Surv | Mondrian CC Surv [Seed Range] | Paired Δ Surv [seed 2.5-97.5%] | Δ Surv Seed SD | Δ Set Size |",
         "|---|---|---|---|---|---|---|---|---|---|---|",
     ])
 
@@ -269,7 +276,7 @@ def make_table6():
         "# Table 6: Empirical Failure of Mondrian Marginal Conformal Prediction (EXPLORATORY)",
         "*Source: `outputs/tables/phase5_subgroup_coverage_corrected_noflags_a010.csv` (100 seeds, noflags, $\\alpha = 0.10$)*",
         "",
-        "> **Mechanism of Failure:** Group-conditional conformal prediction without class conditioning satisfies 90% overall group coverage but catastrophically undercovers patients who die (11.8% to 39.8%) because the ~89% survivor majority dominates each stratum's nonconformity threshold.",
+        "> **Mechanism of Failure:** Group-conditional conformal prediction without class conditioning satisfies 90% overall group coverage but substantially undercovers patients who die (11.8% to 39.8%) because the ~89% survivor majority dominates each stratum's nonconformity threshold.",
         "",
         "| Age Subgroup | Mondrian Marginal Death Coverage | Across-Seed Range [2.5%, 97.5%] | Mondrian Marginal Survivor Coverage |",
         "|---|---|---|---|",

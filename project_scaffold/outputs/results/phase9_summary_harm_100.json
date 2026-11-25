@@ -1,0 +1,30 @@
+{
+ "transport_mimic_thresholds": {
+  "P1_contrast": -0.11038061244491093,
+  "P1_ci": [
+   -0.128747427633011,
+   -0.09250183653187007
+  ],
+  "P1_replicated_upper_lt_0": true,
+  "P2_contrast": -0.13979134983600042,
+  "P2_ci": [
+   -0.14819114339679398,
+   -0.1319092365432475
+  ],
+  "P2_replicated_upper_lt_0": true
+ },
+ "recalibrated_eicu_half": {
+  "P1_contrast": -0.12192883054886375,
+  "P1_ci": [
+   -0.14192226884251558,
+   -0.10299643203739292
+  ],
+  "P1_replicated_upper_lt_0": true,
+  "P2_contrast": -0.0801280307555801,
+  "P2_ci": [
+   -0.08620084841424724,
+   -0.07403618075292309
+  ],
+  "P2_replicated_upper_lt_0": true
+ }
+}

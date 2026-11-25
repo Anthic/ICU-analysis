@@ -37,3 +37,6 @@ Note: the table compares deviation from 0.90 in hospital-seeds; hospital-seed ro
 
 ## Limits
 Ecological correlations on few strata; collinearity of age/prevalence/AUROC; 20 seeds on the same patients; eICU feature definitions differ (see Phase 6 note); not yet run on hospital-disjoint splits.
+
+
+> 2026-11-24 update: the '~40 calibration deaths' rule in this document is superseded by the variance-versus-bias break-even in `paper/small_stratum_rule_NOTE.md` (about 90-110 deaths at hospital-level shortfalls of about 0.03; 14-36 deaths at shortfalls of 0.05-0.08). Treat the 40 figure as an empirical observation, not a rule.

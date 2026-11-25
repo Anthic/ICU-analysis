@@ -435,3 +435,21 @@ claim is verified for seeds 0-9.
 - **STROBE Flow:** All ICU stays 94,458 -> First ICU stay 65,366 -> LOS >= 24h 51,838 -> Adults >= 18: 51,838 (10.65% mortality, 5,522 deaths / 51,838 patients; exact: 5,522 / 51,838 = 0.106524).
 - **Extraction Protocol:** Streamed chunked extraction (chunksize 2,000,000) from `chartevents` & `labevents`. Observation windows: vitals [intime, intime+24h], labs [intime-6h, intime+24h]. Features: min/max/mean. Outlier filtering per physiological ranges (NaN conversion, no patient row drop).
 - **Full Guide:** See `paper/reviewer_responses_and_methods_evidence.md` for verbatim text snippets and reviewer FAQ answers.
+
+
+## Phase 9/10 (2026-11-24)
+- Phase 9: P1/P2 stratum-minus-overall contrasts, hospital-cluster CI (paper/phase9_endpoint_contrasts_NOTE.md); post hoc.
+- Phase 10: calibration-implied coverage test + synthetic demo (paper/phase10_calibration_implied_NOTE.md); survivor side R2 0.92-0.99, death side partial.
+- Phase 11 (2026-11-24): hospice/palliative sensitivity + continuous-age bands, MIMIC-only; age pattern persists (paper/phase11_endoflife_NOTE.md). Manuscript title/abstract/aims reframed to neutral wording.
+- Phase 12 (2026-11-24): P(death|set), set-size equity, equalised-odds baseline; Mondrian-by-age equals EO thresholds (99%+); unequal predictive values (paper/phase12_utility_equity_NOTE.md).
+- Phase 13 (2026-11-24): robustness (temporal, logistic, alpha sweep, placebo) - age pattern persists; Mondrian degrades under temporal shift (paper/phase13_robustness_NOTE.md).
+- References audited and fixed 2026-11-24 via OpenAlex (see fixlist); refs 1,3,5,17 still to verify.
+- 2026-11-24: figures regenerated with neutral titles + Figures 4-5; small-stratum rule replaced (paper/small_stratum_rule_NOTE.md); TRIPOD+AI/STROBE checklist drafted; code-status scripts ready, extraction must be run on the PC (not yet run).
+
+2026-11-25: Peer-review pass (constructive + adversarial, code access) done; reports in paper/reviews/2026-11-25-*. Fixed so far: Table 4 computed from per-seed CSV (+6.36 pp, matches Table 8); Sec 2.2 predictor list (52 primary / 47 harmonised, intubated = GCS-verbal airway proxy); abstract/results wording (nominal guarantee, catastrophically, visually proves); cluster-CI ratio 2-8.5x; third-decimal claim; age-blind eICU shrinkage 32%/52%; EO-equivalence wording. Open: R3 limitation text in Discussion, R6 refs (Sadinle 2019, Gibbs 2023, Jung 2023, Zhou-Sesia 2024) + Discussion comparison, R10 code-status run, R11 write Results/Discussion prose, R12 code pass (independent_check, tests, pin requirements, git for phases 9-14).
+
+2026-11-25 (later): R6 done (refs 24-27 Sadinle/Gibbs/Jung/Zhou-Sesia verified via OpenAlex, cited in Discussion 4.2); R11 done (Results 3.1-3.7 prose, Discussion 4.1-4.4 written in master); R12 partly done (independent_check.py ROOT now relative; tests added: Mondrian = group thresholds, split disjointness; 9 tests pass). Open: R9 save age-blind CITL script and harmonise max-gap versions; R10 code-status run on PC; R12 independent_check 15-group coverage, Fig 2 hard-coded values, pin requirements, put phases 9-14 in git; ref 3 replace; refs 1,3,5,17 verify; abstract/Conclusion refresh.
+2026-11-25: Phase 14 code-status sensitivity run (100 seeds): pattern unchanged; see paper/phase14_codestatus_NOTE.md; manuscript 2.14 + Results 3.6 updated. R10 closed.
+2026-11-25: R9 done (08b age-blind script, 100 seeds; metric versions labelled). Refs 1,3,5,17 verified; abstract refreshed.
+2026-11-25: Figures regenerated from CSV (Fig2 patched in generate_paper_master_figures.py; Fig3-5 in make_figures_3_4_5.py); Fig 4 shows raw and recalibrated; wording neutralised.
+2026-11-25: comparison note research_writing/13_COMPARISON_GAO_ZHONG_TASAR (Gao = abstract only, retry full text).

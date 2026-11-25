@@ -132,13 +132,13 @@ def generate_figures():
     ax1_b.set_ylabel("Class-Conditional Coverage (%)", fontsize=11, fontweight="bold")
     ax1_b.set_xlim(-0.65, 3.65)
     ax1_b.set_ylim(68.0, 107.0)
-    ax1_b.set_title("B. The Young Decedent Under-coverage Gap\n(Baseline Conformal Calibration Fails in Low-Prevalence Strata)",
+    ax1_b.set_title("B. The Young Decedent Under-coverage Gap\n(Pooled Calibration, Class-Conditional Coverage by Age)",
                     fontsize=11.5, fontweight="bold", pad=10)
     ax1_b.legend(loc="upper right", frameon=True, facecolor="#F8FAFC", edgecolor="#CBD5E1", fontsize=9.0)
     ax1_b.grid(True, axis="y", zorder=0)
 
     # -------------------------------------------------------------------------
-    # Panel C: Complete Restoration of Age Equity (Global vs Mondrian CC)
+    # Panel C: Pooled vs age-Mondrian class-conditional coverage
     # -------------------------------------------------------------------------
     age_p5 = df5_cc[df5_cc["stratification_attribute"] == "age_group"].set_index("subgroup").reindex(age_groups)
     m_death = age_p5["coverage_deaths_mean"].to_numpy() * 100.0
@@ -147,11 +147,11 @@ def generate_figures():
     w4 = 0.19
     ax1_c.bar(x - 1.5*w4, death_cov, w4, label="Baseline: Death Coverage (y = 1)",
               color="#F59E0B", edgecolor="#78350F", linewidth=0.9, zorder=3)
-    ax1_c.bar(x - 0.5*w4, m_death, w4, label="Mondrian CC: Death Coverage (y = 1) [Repaired]",
+    ax1_c.bar(x - 0.5*w4, m_death, w4, label="Mondrian CC: Death Coverage (y = 1)",
               color="#DC2626", edgecolor="#7F1D1D", linewidth=0.9, zorder=3)
     ax1_c.bar(x + 0.5*w4, surv_cov, w4, label="Baseline: Survivor Coverage (y = 0)",
               color="#3B82F6", edgecolor="#1E3A8A", linewidth=0.9, zorder=3)
-    ax1_c.bar(x + 1.5*w4, m_surv, w4, label="Mondrian CC: Survivor Coverage (y = 0) [Repaired]",
+    ax1_c.bar(x + 1.5*w4, m_surv, w4, label="Mondrian CC: Survivor Coverage (y = 0)",
               color="#10B981", edgecolor="#064E3B", linewidth=0.9, zorder=3)
 
     ax1_c.axhline(90.0, color="#0F172A", linestyle="--", linewidth=1.5,
@@ -196,7 +196,7 @@ def generate_figures():
     ax1_c.set_ylabel("Empirical Test Coverage (%)", fontsize=11, fontweight="bold")
     ax1_c.set_xlim(-0.55, 3.55)
     ax1_c.set_ylim(70.0, 103.0)
-    ax1_c.set_title("C. Complete Restoration of Age Equity (All Strata Converge to 90.0% Coverage via Mondrian CC)",
+    ax1_c.set_title("C. Age x Class Mondrian Calibration Brings Coverage Close to 90% in Every Age Stratum (by Construction)",
                     fontsize=12, fontweight="bold", pad=10)
     ax1_c.legend(loc="upper center", bbox_to_anchor=(0.5, -0.16), ncol=3, frameon=True,
                  facecolor="#F8FAFC", edgecolor="#CBD5E1", fontsize=9.5, columnspacing=1.8)
@@ -205,7 +205,7 @@ def generate_figures():
     # Master Figure Suptitle safely in top margin (y=0.96)
     fig1.suptitle(
         "Figure 1: The Anatomy of the Age Disparity in Critical Care Conformal Prediction\n"
-        "Baseline Risk Misdistribution Induces a 5.9 pp Decedent Under-coverage in Young Adults, Resolved by Mondrian Calibration",
+        "Pooled Class-Conditional Calibration Under-covers Young Decedents (5.9 pp) and Elderly Survivors; Age Mondrian Calibration Reduces the Gap",
         fontsize=13.5, fontweight="bold", y=0.96
     )
 
@@ -217,7 +217,7 @@ def generate_figures():
     # =========================================================================
     # FIGURE 2: RACIAL AND PAYER EQUITY AUDIT VS WHITE PARITY
     # =========================================================================
-    print("Generating Figure 2: Racial and Payer Equity Audit...")
+    print("Generating Figure 2: Racial and Payer Subgroup Audit...")
     fig2 = plt.figure(figsize=(15.5, 10.5))
     fig2.subplots_adjust(top=0.85, bottom=0.10, left=0.07, right=0.96, hspace=0.32, wspace=0.22)
     gs2 = fig2.add_gridspec(2, 2, height_ratios=[1.0, 1.12])
@@ -230,9 +230,17 @@ def generate_figures():
     # Panel A: Survivor Coverage Disparities vs White Reference (Table 7)
     # -------------------------------------------------------------------------
     races = ["Asian", "Black", "Hispanic", "Other/Unknown"]
-    deltas = [-2.10, -1.30, +2.16, -1.44]
-    boot_low = [-3.53, -2.18, +1.07, -2.16]
-    boot_high = [-0.50, -0.38, +3.16, -0.79]
+    _r4 = df4[df4["attribute"] == "race_group"].set_index("subgroup")
+    _lab = {"Asian": "Asian", "Black": "Black", "Hispanic": "Hispanic", "Other/Unknown": "Other/Unknown (race)"}
+    _w = _r4.loc["White", "cc_surv_cov_mean"]
+    deltas = [round((_r4.loc[_lab[r], "cc_surv_cov_mean"] - _w) * 100, 2) for r in races]
+    # bootstrap CIs of the difference to White are parsed from paper/tables/table7 (computed in make_paper_tables.py)
+    import re as _re
+    _t7 = (PROJECT_ROOT / "paper" / "tables" / "table7_survivor_disparity_vs_white.md").read_text(encoding="utf-8")
+    boot_low, boot_high = [], []
+    for r in races:
+        _m = _re.search(r"\*\*" + _re.escape(_lab[r]) + r"\*\*.*?\[([+-][\d.]+) pp, ([+-][\d.]+) pp\]", _t7)
+        boot_low.append(float(_m.group(1))); boot_high.append(float(_m.group(2)))
 
     y_pos = np.arange(len(races))
     bar_colors = ["#DC2626" if d < 0 else "#0D9488" for d in deltas]
@@ -246,7 +254,7 @@ def generate_figures():
                    fmt="none", ecolor="#0F172A", elinewidth=1.4, capsize=4.5, capthick=1.4, zorder=4)
 
     ax2_a.axvline(0, color="#0F172A", linestyle="-", linewidth=1.5,
-                  label="White Reference Parity (0.0 pp)", zorder=2)
+                  label="White reference (0.0 pp)", zorder=2)
 
     # Place text badge ABOVE each bar at (y_pos + 0.28) -> ZERO collision with error bar whiskers!
     for i in range(len(races)):
@@ -267,7 +275,7 @@ def generate_figures():
     ax2_a.set_xlabel("Survivor Coverage Difference vs White Reference (pp)", fontsize=11, fontweight="bold")
     ax2_a.set_xlim(-4.6, 4.6)
     ax2_a.set_ylim(-0.5, len(races) - 0.3)
-    ax2_a.set_title("A. Subgroup Survivor Disparity vs White Patients (Table 7)\n(Asian & Black Patients Face Statistically Significant Under-coverage)",
+    ax2_a.set_title("A. Subgroup Survivor Disparity vs White Patients (Table 7)\n(Exploratory; Unadjusted 95% CIs, Many Comparisons)",
                     fontsize=11.5, fontweight="bold", pad=10)
     ax2_a.legend(loc="lower right", frameon=True, facecolor="#F8FAFC", edgecolor="#CBD5E1", fontsize=9.5)
     ax2_a.grid(True, axis="x", zorder=0)
@@ -276,7 +284,8 @@ def generate_figures():
     # Panel B: Calibration-in-the-Large (CITL = p_hat - y) across Demographics
     # -------------------------------------------------------------------------
     groups_citl = ["Black", "White", "Asian", "Hispanic", "Other Race", "Medicaid", "Medicare", "Private", "Other Ins."]
-    citl_vals = [+12.9, +4.1, +8.1, +7.3, -34.9, -2.3, -3.6, +2.9, -19.0]  # in 10^-3
+    _sg = ["Black", "White", "Asian", "Hispanic", "Other/Unknown (race)", "Medicaid", "Medicare", "Private", "Other/Unknown (insurance)"]
+    citl_vals = [round(float(df4[df4["subgroup"] == g]["citl_mean"].iloc[0]) * 1000, 1) for g in _sg]  # in 10^-3
     citl_colors = ["#DC2626" if c < 0 else "#2563EB" for c in citl_vals]
 
     y_citl = np.arange(len(groups_citl))
@@ -304,20 +313,28 @@ def generate_figures():
     ax2_b.grid(True, axis="x", zorder=0)
 
     # -------------------------------------------------------------------------
-    # Panel C: Complete Repair across Racial and Payer Subgroups
+    # Panel C: Death coverage by race and payer, pooled vs Mondrian class-conditional
     # -------------------------------------------------------------------------
     demo_groups = ["Asian", "Black", "Hispanic", "Other Race", "White", "Medicaid", "Medicare", "Private", "Other Ins."]
-    g_d = [88.64, 91.04, 87.62, 91.35, 89.61, 87.97, 91.45, 86.60, 92.34]
-    m_d = [91.18, 90.87, 90.28, 90.20, 90.08, 90.56, 90.18, 90.25, 90.52]
+    g_d = [round(float(df4[df4["subgroup"] == g]["cc_death_cov_mean"].iloc[0]) * 100, 2) for g in _sg[2:3] + _sg[0:1] + ["Hispanic", "Other/Unknown (race)", "White", "Medicaid", "Medicare", "Private", "Other/Unknown (insurance)"]]
+    _p5cc = df5[df5["calibration_type"] == "mondrian_class_conditional"]
+    _mk = {"Other/Unknown (race)": ("race_group", "Other/Unknown"), "Other/Unknown (insurance)": ("insurance_group", "Other/Unknown")}
+    def _mval(g):
+        a, n = _mk.get(g, (None, g))
+        q = _p5cc[(_p5cc["subgroup"] == n)] if a is None else _p5cc[(_p5cc["subgroup"] == n) & (_p5cc["stratification_attribute"] == a)]
+        if a is None:
+            q = q[q["stratification_attribute"].isin(["race_group", "insurance_group"])]
+        return round(float(q["coverage_deaths_mean"].iloc[0]) * 100, 2)
+    m_d = [_mval(g) for g in ["Asian", "Black", "Hispanic", "Other/Unknown (race)", "White", "Medicaid", "Medicare", "Private", "Other/Unknown (insurance)"]]
 
     x_demo = np.arange(len(demo_groups))
     w_demo = 0.35
 
     ax2_c.bar(x_demo - w_demo/2, g_d, w_demo,
-              label="Baseline Global Conformal Death Coverage (Unequal)",
+              label="Pooled Class-Conditional Death Coverage",
               color="#1E3A8A", edgecolor="#0F172A", linewidth=1.0, zorder=3)
     ax2_c.bar(x_demo + w_demo/2, m_d, w_demo,
-              label="Mondrian Class-Conditional Death Coverage (Equitable)",
+              label="Mondrian Class-Conditional Death Coverage",
               color="#0D9488", edgecolor="#0F172A", linewidth=1.0, zorder=3)
 
     ax2_c.axhline(90.0, color="#DC2626", linestyle="--", linewidth=1.5,
@@ -340,15 +357,15 @@ def generate_figures():
     ax2_c.set_xticklabels(demo_groups, fontsize=11, fontweight="bold")
     ax2_c.set_ylabel("Class-Conditional Death Coverage (%)", fontsize=11, fontweight="bold")
     ax2_c.set_ylim(73.0, 102.0)
-    ax2_c.set_title("C. Restoration of Demographic Parity: All Racial and Payer Subgroups Enforced to 90% Nominal Coverage",
+    ax2_c.set_title("C. Death Coverage by Race and Payer: Pooled vs Mondrian Class-Conditional (Nominal 90%)",
                     fontsize=12, fontweight="bold", pad=10)
     ax2_c.legend(loc="upper center", bbox_to_anchor=(0.5, -0.16), ncol=3, frameon=True,
                  facecolor="#F8FAFC", edgecolor="#CBD5E1", fontsize=10, columnspacing=1.8)
     ax2_c.grid(True, axis="y", zorder=0)
 
     fig2.suptitle(
-        "Figure 2: Racial and Socioeconomic Fairness Audit in ICU Conformal Prediction\n"
-        "Baseline Disparities in Survivor Coverage and Risk Calibration Restored to Full Nominal Equity via Mondrian Calibration",
+        "Figure 2: Coverage and Calibration by Race and Payer in ICU Conformal Prediction (MIMIC-IV)\n"
+        "Survivor-Coverage Differences, Calibration-in-the-Large and Mondrian Death Coverage (Exploratory)",
         fontsize=13.5, fontweight="bold", y=0.96
     )
 

@@ -9,7 +9,7 @@ CIs: Wilson on mean per-seed counts (approximate; seeds reuse the same patients,
 |---|---|---|
 | P1 eICU death coverage, ages 18-49 | 0.902 [0.870, 0.926] -> NOT replicated | 0.819 [0.781, 0.852] -> replicated |
 | P2 eICU survivor coverage, ages 75+ | 0.748 [0.741, 0.756] -> replicated | 0.677 [0.668, 0.685] -> replicated |
-Hospital-disjoint eICU split gives the same numbers to the third decimal (P1 0.901/0.818; P2 0.748/0.677).
+Hospital-disjoint eICU split gives nearly the same transport numbers (P1 0.901/0.818; P2 0.748/0.677); for eICU-recalibrated configurations the difference is up to about 0.003 (e.g. 0.884 vs 0.881).
 P2 is confounded with the overall survivor shortfall under transport (overall survivor coverage 0.835 main, 0.817 harm; death coverage 0.920/0.928): pure MIMIC->eICU transport over-covers decedents and under-covers survivors because the model over-predicts risk in eICU (CITL +0.042/+0.051; calibration slope 0.88/0.83; AUROC 0.834/0.810 vs MIMIC 0.873/0.847).
 
 ## 2. Age pattern after eICU recalibration (ext_eicucal_cc), death / survivor coverage
@@ -47,3 +47,6 @@ Group-specific thresholds do not beat the pooled one in deviation from 0.90 at a
 - Not replicated: P1 in `main` (0.902). Must be reported as such, with the harmonised result as sensitivity analysis, not as a substitute.
 - Not available in eICU: insurance. Race categories differ. eICU is 2014-15.
 - Do not claim causality for the mechanism; present as an explanation consistent with calibration + base-rate heterogeneity, with the stratum count caveat.
+
+
+> 2026-11-24 update: the '~40 calibration deaths' rule in this document is superseded by the variance-versus-bias break-even in `paper/small_stratum_rule_NOTE.md` (about 90-110 deaths at hospital-level shortfalls of about 0.03; 14-36 deaths at shortfalls of 0.05-0.08). Treat the 40 figure as an empirical observation, not a rule.

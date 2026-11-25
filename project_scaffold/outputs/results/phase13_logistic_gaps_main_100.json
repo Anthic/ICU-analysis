@@ -1,0 +1,20 @@
+[
+ {
+  "variant":"logistic",
+  "method":"mondrian_age",
+  "alpha":0.1,
+  "max_gap_deaths":0.0393343481,
+  "sd_gd":0.0179119704,
+  "max_gap_surv":0.0124566456,
+  "sd_gs":0.004226908
+ },
+ {
+  "variant":"logistic",
+  "method":"pooled",
+  "alpha":0.1,
+  "max_gap_deaths":0.1023004521,
+  "sd_gd":0.0298002748,
+  "max_gap_surv":0.0831767155,
+  "sd_gs":0.0084038867
+ }
+]

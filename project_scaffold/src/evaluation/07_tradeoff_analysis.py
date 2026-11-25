@@ -224,7 +224,7 @@ def run_tradeoff_analysis():
     ax_a.axhline(90.0, linestyle="--", color="#333333", linewidth=1.2, label="Nominal Target (90%)")
     ax_a.set_xlabel("Mean Prediction Set Size ($|S|$)", fontsize=11, fontweight="bold")
     ax_a.set_ylabel("Class-Conditional Death Coverage (%)", fontsize=11, fontweight="bold")
-    ax_a.set_title("A. Subgroup Death Coverage vs Set Size (Fairness Repair)", fontsize=12, fontweight="bold")
+    ax_a.set_title("A. Death Coverage vs Set Size (Pooled to Mondrian CC)", fontsize=12, fontweight="bold")
     ax_a.set_ylim(80, 96)
     ax_a.grid(True, linestyle=":", alpha=0.5)
     ax_a.legend(loc="lower right", frameon=True, fontsize=9)
@@ -262,7 +262,7 @@ def run_tradeoff_analysis():
     ax_b.axhline(90.0, linestyle="--", color="#333333", linewidth=1.2, label="Nominal Target (90%)")
     ax_b.set_xlabel("Mean Prediction Set Size ($|S|$)", fontsize=11, fontweight="bold")
     ax_b.set_ylabel("Death-Label Coverage (%)", fontsize=11, fontweight="bold")
-    ax_b.set_title("B. The Pitfall: Catastrophic Collapse of Mondrian Marginal", fontsize=12, fontweight="bold")
+    ax_b.set_title("B. Mondrian Marginal: Very Low Death Coverage", fontsize=12, fontweight="bold")
     ax_b.set_ylim(5, 96)
     ax_b.grid(True, linestyle=":", alpha=0.5)
     ax_b.legend(loc="center right", frameon=True, fontsize=9)
@@ -278,7 +278,7 @@ def run_tradeoff_analysis():
     ax_c.set_yticks(y_pos)
     ax_c.set_yticklabels(sg_order, fontsize=10)
     ax_c.set_xlabel(r"Change in Prediction Set Size ($\Delta |S| = |S|_{\mathrm{Mondrian}} - |S|_{\mathrm{Global}}$)", fontsize=11, fontweight="bold")
-    ax_c.set_title("C. Efficiency Penalty by Subgroup (Set-Size Inflation Bounded Within ±0.06 Labels)", fontsize=12, fontweight="bold")
+    ax_c.set_title("C. Set-Size Change by Subgroup (Change in Mean Set Size, Within ±0.06 Labels)", fontsize=12, fontweight="bold")
     ax_c.grid(True, axis="x", linestyle=":", alpha=0.5)
     
     # Add data labels on bars
@@ -295,7 +295,7 @@ def run_tradeoff_analysis():
     
     fig.suptitle(
         "MIMIC-IV Conformal Fairness & Efficiency Trade-off Analysis\n"
-        "Achieving Subgroup Coverage Guarantees Incurs Negligible Information Cost (100 Splits, Nominal 90% Target)",
+        "Set-Size Change From Subgroup Class-Conditional Calibration (100 Splits, Nominal 90% Target)",
         fontsize=14, fontweight="bold"
     )
     

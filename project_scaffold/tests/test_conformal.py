@@ -91,3 +91,43 @@ def test_mondrian_class_conditional_coverage_per_group_and_class():
             mask = (g_test == g) & (y_test == label)
             cov = sets[mask, label].mean()
             assert abs(cov - 0.90) < 0.035
+
+
+def test_age_mondrian_equals_group_specific_thresholds():
+    """Age x class Mondrian sets are group-specific risk thresholds (equalised-odds-type post-processing)."""
+    rng = np.random.default_rng(7)
+    n = 6000
+    groups = rng.choice(["a", "b", "c"], size=n)
+    base = {"a": 0.05, "b": 0.12, "c": 0.25}
+    p = np.clip(rng.beta(1, 8, size=n) * (1 + 3 * np.array([base[g] for g in groups])), 1e-4, 1 - 1e-4)
+    y = (rng.random(n) < p).astype(int)
+    q = fit_mondrian_class_conditional(y, p, groups, alpha=0.10)
+    sets = prediction_sets_mondrian(p, groups, q)
+    for g in ["a", "b", "c"]:
+        m = groups == g
+        q0, q1 = q[g]
+        # survivor label in set iff p <= q0 ; death label in set iff 1 - p <= q1
+        np.testing.assert_array_equal(sets[m, 0], (1 - (1 - p[m])) <= q0 + 1e-12)
+        np.testing.assert_array_equal(sets[m, 1], (1 - p[m]) <= q1 + 1e-12)
+
+
+def test_split_indices_are_disjoint_and_cover_all():
+    import importlib.util
+    import pandas as pd
+    from pathlib import Path
+
+    path = Path(__file__).resolve().parents[1] / "src" / "models" / "03_train_baseline.py"
+    spec = importlib.util.spec_from_file_location("baseline", path)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    rng = np.random.default_rng(1)
+    df = pd.DataFrame({
+        "subject_id": np.arange(2000),
+        "mortality": rng.integers(0, 2, 2000),
+        "race_group": rng.choice(["W", "B", "A"], 2000),
+    })
+    train, cal, test = mod.split_indices(df, seed=3)[:3]
+    assert len(np.intersect1d(train, cal)) == 0
+    assert len(np.intersect1d(train, test)) == 0
+    assert len(np.intersect1d(cal, test)) == 0
+    assert len(train) + len(cal) + len(test) == len(df)

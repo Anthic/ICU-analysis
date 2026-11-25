@@ -1,0 +1,86 @@
+{
+ "by_variant": [
+  {
+   "dataset": "eicu",
+   "variant": "cc_global",
+   "set_size_range": 0.1787968429,
+   "pdeath_surv_only_min": 0.0089119077,
+   "pdeath_surv_only_max": 0.0300786849,
+   "missed_min": 0.081338029,
+   "missed_max": 0.1164161206
+  },
+  {
+   "dataset": "eicu",
+   "variant": "eo_age",
+   "set_size_range": 0.2076141701,
+   "pdeath_surv_only_min": 0.0080724278,
+   "pdeath_surv_only_max": 0.0331281726,
+   "missed_min": 0.0988723036,
+   "missed_max": 0.0998598508
+  },
+  {
+   "dataset": "eicu",
+   "variant": "mondrian_age",
+   "set_size_range": 0.2031224169,
+   "pdeath_surv_only_min": 0.0079269915,
+   "pdeath_surv_only_max": 0.0330389081,
+   "missed_min": 0.0969868155,
+   "missed_max": 0.0992051626
+  },
+  {
+   "dataset": "eicu",
+   "variant": "riskbin10",
+   "set_size_range": 0.0077775328,
+   "pdeath_surv_only_min": 0.0378899344,
+   "pdeath_surv_only_max": 0.112696422,
+   "missed_min": 0.0940073264,
+   "missed_max": 0.101726731
+  },
+  {
+   "dataset": "mimic",
+   "variant": "cc_global",
+   "set_size_range": 0.2083091116,
+   "pdeath_surv_only_min": 0.0130517158,
+   "pdeath_surv_only_max": 0.0262824556,
+   "missed_min": 0.0694034628,
+   "missed_max": 0.1595592873
+  },
+  {
+   "dataset": "mimic",
+   "variant": "eo_age",
+   "set_size_range": 0.2095856465,
+   "pdeath_surv_only_min": 0.0092186124,
+   "pdeath_surv_only_max": 0.0325961924,
+   "missed_min": 0.0996716375,
+   "missed_max": 0.1029777471
+  },
+  {
+   "dataset": "mimic",
+   "variant": "mondrian_age",
+   "set_size_range": 0.2012294993,
+   "pdeath_surv_only_min": 0.0086625982,
+   "pdeath_surv_only_max": 0.0322388179,
+   "missed_min": 0.0951992385,
+   "missed_max": 0.0990449118
+  },
+  {
+   "dataset": "mimic",
+   "variant": "riskbin10",
+   "set_size_range": 0.0660754635,
+   "pdeath_surv_only_min": 0.0842134718,
+   "pdeath_surv_only_max": 0.1409156928,
+   "missed_min": 0.0870146588,
+   "missed_max": 0.1008155221
+  }
+ ],
+ "eo_vs_mondrian_agreement": [
+  {
+   "dataset": "eicu",
+   "agree_with_mondrian_age": 0.9970237971
+  },
+  {
+   "dataset": "mimic",
+   "agree_with_mondrian_age": 0.9920771605
+  }
+ ]
+}

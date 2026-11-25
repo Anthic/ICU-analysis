@@ -55,9 +55,9 @@ The primary vulnerability identified in the audit was an acute coverage gap acro
 
 #### 🖼️ Detailed Description of Figure 1: The Anatomy of the Age Disparity
 - **Figure Reference:** [`outputs/figures/figure1_age_disparity_and_repair.png`](file:///d:/dataset/icu_conformal_fairness_project%20(1)/project_scaffold/outputs/figures/figure1_age_disparity_and_repair.png)
-- **Panel A (Baseline Clinical Risk by Age):** Contrasts observed in-hospital mortality (Navy bars) against mean model predicted risk $\hat{p}$ (Blue bars) across the four age strata. It visually proves that young adults (age 18–49) have 2.4× lower baseline mortality (6.3% vs 15.4% for age 75+). Because the predictive model is well-calibrated to this base rate, young patients are routinely assigned low risk scores, predisposing them to high nonconformity scores when an adverse event occurs.
+- **Panel A (Baseline Clinical Risk by Age):** Contrasts observed in-hospital mortality (Navy bars) against mean model predicted risk $\hat{p}$ (Blue bars) across the four age strata. It shows that young adults (age 18–49) have 2.4× lower baseline mortality (6.3% vs 15.4% for age 75+). Because the predictive model is well-calibrated to this base rate, young patients are routinely assigned low risk scores, predisposing them to high nonconformity scores when an adverse event occurs.
 - **Panel B (The Young Decedent Gap):** Displays class-conditional death coverage (Red bars) and survivor coverage (Teal bars) under baseline conformal prediction. For age 18–49, a dramatic **10.84 percentage point intra-group gap** exists between survivor coverage (94.90%) and decedent coverage (84.06%), falling 5.94 pp below the 90% dashed reference line. In contrast, for age 75+, the pattern inverts (survivor coverage drops to 82.94%, while death coverage is 93.14%).
-- **Panel C (Restoration via Mondrian Calibration):** Illustrates the head-to-head comparison before and after Mondrian class-conditional calibration. For every age bracket, both death coverage (orange $\to$ red) and survivor coverage (blue $\to$ green) converge precisely to the nominal 90.0% dashed threshold, eliminating the age disparity entirely (Age 18–49 death coverage repaired by **+6.36 pp / +6.25 pp**, reaching 90.42%).
+- **Panel C (Restoration via Mondrian Calibration):** Illustrates the head-to-head comparison before and after Mondrian class-conditional calibration. For every age bracket, both death coverage (orange $\to$ red) and survivor coverage (blue $\to$ green) converge precisely to the nominal 90.0% dashed threshold, narrowing the age disparity to within sampling variability (Age 18–49 death coverage repaired by **+6.36 pp / +6.36 pp**, reaching 90.42%).
 
 ---
 
@@ -90,16 +90,16 @@ Evaluating demographic miscalibration via CITL ($\bar{p} - \bar{y}$) demonstrate
 
 #### 1. Coverage Restoration via Stratified Calibration
 Implementing Mondrian class-conditional conformal prediction—computing calibration thresholds independently for each (subgroup $\times$ class) stratum—restored empirical coverage to the nominal 90.0% level across every audited demographic group (*Table 4*):
-- **Age 18–49:** Death coverage increased from 84.06% to **90.42%** (paired bootstrap difference: **+6.25 pp** [95% CI: +5.21, +7.32 pp]; difference of 100-seed means: **+6.36 pp**). Survivor coverage adjusted from 94.90% to 89.97% (paired difference: −4.94 pp [−5.22, −4.66 pp]).
-- **Age 75+:** Survivor coverage increased from 82.94% to **90.04%** (paired difference: **+7.10 pp** [+6.85, +7.35 pp]). Death coverage adjusted from 93.14% to 90.19% (paired difference: −2.96 pp [−3.28, −2.66 pp]).
-- **Private insurance:** Death coverage increased from 86.60% to **90.25%** (paired difference: **+3.63 pp** [+3.12, +4.21 pp]).
-- **Medicaid:** Death coverage increased from 87.97% to **90.56%** (paired difference: **+2.63 pp** [+2.17, +3.13 pp]).
-- **Hispanic patients:** Death coverage increased from 87.62% to **90.28%** (paired difference: **+2.66 pp** [+1.68, +3.77 pp]).
+- **Age 18–49:** Death coverage increased from 84.06% to **90.42%** (mean paired difference over 100 splits: **+6.36 pp**; 2.5–97.5 percentile of split-level differences +0.30 to +14.58 pp). Survivor coverage adjusted from 94.90% to 89.97% (paired difference: −4.93 pp [−6.66, −3.64]).
+- **Age 75+:** Survivor coverage increased from 82.94% to **90.04%** (mean paired difference: **+7.09 pp**, split range [+5.72, +8.98]). Death coverage adjusted from 93.14% to 90.19% (paired difference: −2.95 pp [−5.88, −0.96]).
+- **Private insurance:** Death coverage increased from 86.60% to **90.25%** (paired difference: **+3.65 pp** [+0.82, +7.33]).
+- **Medicaid:** Death coverage increased from 87.97% to **90.56%** (paired difference: **+2.59 pp** [-1.53, +7.46]).
+- **Hispanic patients:** Death coverage increased from 87.62% to **90.28%** (paired difference: **+2.67 pp** [-6.47, +12.82]).
 
 #### 2. Split-to-Split Variance & Calibration-Set Sampling Noise
 Auditing across the 100 independent splits revealed the true statistical origin of split-to-split variance (*Table 5*):
 - Across-seed standard deviations for Mondrian calibration were only 7% to 50% larger than global baseline SD (variance ratio 1.07× to 1.50×, reaching 1.80× in small strata such as Other/Unknown insurance). This modest inflation reflects the finite-sample sampling noise inherent to smaller calibration cells.
-- The empirical across-seed standard deviation of the paired difference ($\Delta = \text{Mondrian} - \text{Global}$) was **3.61 pp for age 18–49 death coverage**: while the mean repair is decisive (+6.25 pp), the realized delta fluctuates from split to split.
+- The empirical across-seed standard deviation of the paired difference ($\Delta = \text{Mondrian} - \text{Global}$) was **3.61 pp for age 18–49 death coverage**: while the mean repair is decisive (+6.36 pp), the realized delta fluctuates from split to split.
 - **Statistical Resolution:** This split-to-split variation is primarily driven by test-sampling variability: in any single 25% test split, the age 18–49 stratum contains on average only **151 decedent stays**. The binomial standard error from test sampling alone is approximately $\sqrt{0.90 \times 0.10 / 151} \approx 2.44\text{ pp}$, which accounts for the vast majority of the observed 3.03%–3.49% seed SD.
 
 ---
@@ -158,7 +158,7 @@ In intensive care units, prognostic algorithms frequently inform triage, rapid r
 Unlike previous investigations relying on single-split evaluations, this study implemented:
 - **100 independent random train/calibration/test splits**, revealing the true nature of split-to-split variance.
 - **Hierarchical bootstrapping (B = 1,000, fixed seed 42)** resampling unique patient stays with replacement, ensuring robust standard errors that avoid cluster-inflation.
-- **Verification via independent recomputation**, where every metric was recomputed from raw prediction parquets by an isolated script and matched published CSV outputs within 0.000000 absolute tolerance.
+- **Verification via independent recomputation**, where coverage, set size and CITL for all 13 age, insurance and race subgroups were re-aggregated from the stored prediction parquets by a separate script and matched the published CSV outputs (this checks aggregation, not model fitting or threshold derivation).
 
 ### 2.5 Study Limitations
 Several methodological and clinical limitations must be considered:
